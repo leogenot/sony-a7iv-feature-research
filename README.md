@@ -34,6 +34,20 @@ files. Obtain the official update yourself and keep generated data local.
    [Firmware extraction](docs/FIRMWARE_EXTRACTION.md) and
    [Research evidence](docs/RESEARCH_EVIDENCE.md).
 
+## Enter service mode
+
+Set the camera's USB connection mode to **Mass Storage**, connect it by USB,
+then run:
+
+```bash
+cd ~/Documents/Sony-PMCA-RE
+sudo ./venv/bin/python ./pmca-console.py serviceshell
+```
+
+PMCA switches the camera into service mode and authenticates. If the first
+attempt times out while the USB device is changing modes, run the same command
+again after the camera reconnects.
+
 ## Quick shutter-angle commands
 
 Inside PMCA `serviceshell`:
@@ -73,4 +87,3 @@ evidence/   Sanitized property mappings and verification record
 All camera changes documented here operate on persisted backup properties,
 not a repacked firmware update. Test one property at a time and keep the
 original backup and hashes outside this repository.
-
