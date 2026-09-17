@@ -13,9 +13,11 @@ The A7 IV 6.02 firmware contains the full software-side LUT implementation:
 - LUT display/application paths
 - embedded-LUT metadata handling
 
-The first activation experiment below is strongly supported by the A7 IV's
-own model rules, but it has not yet been tested on the physical camera. Keep it
-separate from the shutter-angle experiment.
+The software implementation is present, but the first direct activation test
+did not expose Flexible ISO on the physical A7 IV. The next step is to classify
+whether the setting is rejected, normalized during boot, or retained while its
+menu remains hidden. Keep this experiment separate from the shutter-angle
+change.
 
 ## Main properties
 
@@ -30,22 +32,64 @@ separate from the shutter-angle experiment.
 The User LUT upper bound is hexadecimal `12`, which is decimal 18: the first
 three values are built-ins and values 3 through 18 select User1 through User16.
 
-## Why Flexible ISO is the first test
+## Product-family correction
 
-The A7 IV product class is `LAX`. Its own generated exclusion rules explicitly
-contain both:
+The earlier working note identified the A7 IV as product class `LAX`. That was
+an unsupported inference and has been withdrawn. The 6.02 update contains the
+A7 IV backup profile under `SYSIPSX-DSLR/LS`, and the live CEC backup identifies
+itself as `CH89101_CEC`. In `feature_manager::update_product_model()`,
+`PRODUCT_MODEL_LS` maps to `TYPE_CAMERA_PARAMETERS_LS`.
+
+The generated model-difference values for Log Shooting include combinations
+for `TYPE_LAX`, `TYPE_ALCIN_UUD`, and several other camera families, including:
 
 ```text
 LOG_SHOOTING_OFF + MOVIE_MODE + TYPE_LAX
 LOG_SHOOTING_FLEXIBLE_ISO + MOVIE_MODE + TYPE_LAX
 ```
 
-No LUT-specific product-model gate was found for Select LUT. Apply LUT is
-conditioned on Log Shooting and Movie mode. This makes `0x02cf1443=01` the
-narrowest supported experiment. There is no equivalent positive evidence for
-Cine EI values `02` or `03` on the A7 IV.
+There is no corresponding `TYPE_LS` combination. These are generated
+HAITA/model-difference values, so their presence alone does not prove that a
+mode is enabled; the lack of an LS combination is evidence that the direct LAX
+analogy was wrong. No LUT-specific product-model gate was found for Select LUT,
+while Apply LUT is conditioned on Log Shooting and Movie mode. The direct
+property mapping remains valid, but support on LS-class hardware remains
+unproven. There is also no positive A7 IV evidence for Cine EI values `02` or
+`03`.
 
-## First experiment
+## Readback diagnostic
+
+Run this sequence in one service-shell session and record every result:
+
+```text
+bk r 0x02cf1443
+bk w 0x02cf1443 01
+bk r 0x02cf1443
+bk s
+bk r 0x02cf1443
+exit
+```
+
+Cold-boot the camera with the mode dial set to Movie, re-enter service mode,
+and read it once more:
+
+```text
+bk r 0x02cf1443
+```
+
+Interpretation:
+
+| Observation | Meaning |
+| --- | --- |
+| Immediate readback is `00` | The write was rejected or immediately normalized. |
+| Immediate and post-sync reads are `01`, post-boot read is `00` | Startup/model validation reset the setting. |
+| Post-boot read remains `01`, no menu appears | The persisted state was accepted, but a separate runtime or UI support gate hides/disables the feature. |
+
+Do not change the camera product-model value to bypass the gate. Product model
+selects many hardware and UI parameter tables at once and is not a narrow LUT
+switch.
+
+## Original isolated experiment
 
 Read and record the current settings:
 
@@ -65,7 +109,7 @@ Expected:
 01
 ```
 
-Change only Log Shooting:
+Change only Log Shooting, as used in the first physical-camera test:
 
 ```text
 bk w 0x02cf1443 01
@@ -73,7 +117,8 @@ bk s
 exit
 ```
 
-After a cold reboot, inspect Movie mode for:
+The first test did not expose Flexible ISO. If readback remains `01` after a
+cold reboot, inspect Movie mode for:
 
 - Log Shooting Setting
 - Select LUT
@@ -120,4 +165,3 @@ exit
 
 Cold-boot again. Leave the other LUT properties at their original values until
 the Flexible ISO result is understood.
-

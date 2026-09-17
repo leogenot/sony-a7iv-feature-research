@@ -70,5 +70,22 @@ Shutter-angle icon visible in Movie mode
 FX3-style Shutter Mode menu remains hidden
 ```
 
-The camera serial number and backup hash are deliberately omitted.
+The first Custom LUT activation test (`0x02cf1443: 00 -> 01`) did not expose
+Flexible ISO. Its immediate, post-sync, and post-boot readback states have not
+yet been recorded, so this result does not yet distinguish write rejection,
+boot-time normalization, and a separate UI/support gate.
 
+## Log Shooting model-family evidence
+
+The A7 IV 6.02 update stores its matching backup profiles under
+`SYSIPSX-DSLR/LS`, including `CH89101_CEC.bin`; the live backup family is also
+`CH89101_CEC`. The application's feature manager maps `PRODUCT_MODEL_LS` to
+`TYPE_CAMERA_PARAMETERS_LS`.
+
+Generated `PRM_HAITA_FEATURE_MANAGER_model_diff_setting_log_shooting` values
+contain model-specific Off/Flexible-ISO combinations for `TYPE_LAX`,
+`TYPE_ALCIN_UUD`, and multiple other families, but none for `TYPE_LS`. This
+withdraws the earlier LAX classification and means those LAX values cannot be
+used as positive evidence for A7 IV support.
+
+The camera serial number and backup hash are deliberately omitted.
