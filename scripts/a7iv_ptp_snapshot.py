@@ -18,6 +18,10 @@ from a7iv_ptp_log_probe import (
 )
 
 
+SONY_PROTOCOL_3_00 = 0x012C
+SONY_GET_ALL_EXT_DEVICE_PROP_INFO = 0x9209
+
+
 def json_descriptor(data):
     result = parse_descriptor(data)
     result["raw"] = data.hex()
@@ -72,7 +76,14 @@ def main():
 
             read_command(device, SONY_SDIO_CONNECT, [1, 0, 0])
             read_command(device, SONY_SDIO_CONNECT, [2, 0, 0])
-            ext_data = read_command(device, SONY_SDIO_GET_EXT_DEVICE_INFO, [0xC8])
+            # Ask for Sony's current protocol. Cameras that do not support it
+            # return their maximum supported version. Passing 0x00c8 here
+            # deliberately selects the small pre-2020 compatibility surface.
+            ext_data = read_command(
+                device,
+                SONY_SDIO_GET_EXT_DEVICE_INFO,
+                [SONY_PROTOCOL_3_00, 1],
+            )
             version, properties, controls, trailing = parse_extended_device_info(ext_data)
             read_command(device, SONY_SDIO_CONNECT, [3, 0, 0])
 
@@ -86,7 +97,29 @@ def main():
             print("Advertised codes: %d" % len(properties))
             print("Control codes: %d" % len(controls))
 
-            for index, property_code in enumerate(properties, 1):
+            if SONY_GET_ALL_EXT_DEVICE_PROP_INFO in info.operationsSupported:
+                all_property_data = read_command(
+                    device, SONY_GET_ALL_EXT_DEVICE_PROP_INFO, []
+                )
+                snapshot["all_property_info_raw"] = all_property_data.hex()
+                print(
+                    "Aggregate property data: %d bytes"
+                    % len(all_property_data)
+                )
+            else:
+                snapshot["all_property_info_raw"] = None
+                print("Aggregate property operation 0x9209 is not advertised")
+
+            descriptor_codes = (
+                [] if version == SONY_PROTOCOL_3_00 else properties
+            )
+            if version == SONY_PROTOCOL_3_00:
+                print(
+                    "Protocol 3.00 uses aggregate property data; skipping "
+                    "legacy per-property 0x9203 queries"
+                )
+
+            for index, property_code in enumerate(descriptor_codes, 1):
                 try:
                     raw = read_command(
                         device, SONY_GET_DEVICE_PROP_DESC, [property_code]
@@ -97,7 +130,7 @@ def main():
                         "[%d/%d] 0x%04x %s current=%s writable=%s"
                         % (
                             index,
-                            len(properties),
+                            len(descriptor_codes),
                             property_code,
                             descriptor["datatype_name"],
                             descriptor["current"],
@@ -112,7 +145,7 @@ def main():
                     )
                     print(
                         "[%d/%d] 0x%04x unavailable: %s"
-                        % (index, len(properties), property_code, exc)
+                        % (index, len(descriptor_codes), property_code, exc)
                     )
 
         args.output.parent.mkdir(parents=True, exist_ok=True)

@@ -230,10 +230,13 @@ sudo ~/Documents/Sony-PMCA-RE/venv/bin/python \
   --output ~/Documents/a7iv-ptp-angle-on.json
 ```
 
-The script performs Sony's PC Remote handshake, records the advertised
-property/control codes, and reads their descriptors. It does not invoke the
-set-property commands (`0x9205` or `0x9207`) and does not alter camera state.
-The resulting JSON lets us compare the live USB model with the compiled
+The script requests Sony protocol 3.00 (`0x012c, 1`), performs the PC Remote
+handshake, records the advertised property/control codes, and saves the
+aggregate property information returned by read operation `0x9209`. Requesting
+legacy protocol 2.00 (`0x00c8`) would deliberately expose only the small
+pre-2020 compatibility surface even on an A7 IV. The script does not invoke
+the set-property commands (`0x9205` or `0x9207`) and does not alter camera
+state. The resulting JSON lets us compare the live USB model with the compiled
 `ptp_shutter_*` strings without guessing property numbers.
 
 ## Official behavior is product-specific
