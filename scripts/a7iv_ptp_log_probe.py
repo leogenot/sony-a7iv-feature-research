@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only probe for Sony's PTP Log Shooting Mode property."""
+"""Read Sony's Log Shooting PTP descriptor without changing the camera."""
 
 import argparse
 import struct
@@ -7,9 +7,11 @@ import sys
 from pathlib import Path
 
 
-PTP_OC_GET_DEVICE_PROP_DESC = 0x1014
-PTP_OC_GET_DEVICE_PROP_VALUE = 0x1015
-PTP_DPC_SONY_LOG_SHOOTING_MODE = 0xE0E3
+SONY_VENDOR_ID = 0x054C
+SONY_SDIO_CONNECT = 0x9201
+SONY_SDIO_GET_EXT_DEVICE_INFO = 0x9202
+SONY_GET_DEVICE_PROP_DESC = 0x9203
+SONY_LOG_SHOOTING_MODE = 0xE0E3
 
 SCALAR_TYPES = {
     0x0001: ("INT8", "b"),
@@ -35,10 +37,11 @@ def unpack_value(data, offset, datatype):
 
 
 def parse_descriptor(data):
-    if len(data) < 5:
+    # Sony's 0x9203 descriptor has an extra status byte after GetSet.
+    if len(data) < 6:
         raise ValueError("Descriptor is too short: %s" % data.hex())
-    property_code, datatype, get_set = struct.unpack_from("<HHB", data, 0)
-    offset = 5
+    property_code, datatype, get_set, status = struct.unpack_from("<HHBB", data, 0)
+    offset = 6
     factory, offset = unpack_value(data, offset, datatype)
     current, offset = unpack_value(data, offset, datatype)
     if offset >= len(data):
@@ -50,6 +53,7 @@ def parse_descriptor(data):
         "datatype": datatype,
         "datatype_name": SCALAR_TYPES.get(datatype, ("UNKNOWN",))[0],
         "writable": get_set == 1,
+        "status": status,
         "factory": factory,
         "current": current,
         "form": form,
@@ -73,6 +77,53 @@ def parse_descriptor(data):
     return result
 
 
+def unpack_u16_array(data, offset):
+    if offset + 4 > len(data):
+        raise ValueError("Truncated Sony property-code array count")
+    count = struct.unpack_from("<I", data, offset)[0]
+    offset += 4
+    end = offset + count * 2
+    if end > len(data):
+        raise ValueError("Truncated Sony property-code array")
+    values = list(struct.unpack_from("<%dH" % count, data, offset)) if count else []
+    return values, end
+
+
+def parse_extended_device_info(data):
+    if len(data) < 2:
+        raise ValueError("Sony extended-device-info response is too short")
+    version = struct.unpack_from("<H", data, 0)[0]
+    properties, offset = unpack_u16_array(data, 2)
+    controls, offset = unpack_u16_array(data, offset)
+    return version, properties, controls, data[offset:]
+
+
+def read_command(device, operation, params):
+    response, data = device.driver.sendReadCommand(operation, params)
+    device._checkResponse(response)
+    return data
+
+
+def find_sony_ptp_device(drivers, mtp_device_class, ptp_class):
+    cameras = []
+    for _handle, interface_class, driver in drivers.listDevices(SONY_VENDOR_ID):
+        if interface_class != ptp_class:
+            continue
+        device = mtp_device_class(driver)
+        info = device.getDeviceInfo()
+        if "sony" in info.manufacturer.lower():
+            cameras.append((device, info))
+
+    if not cameras:
+        raise SystemExit(
+            "No Sony PTP camera found. Set USB Connection Mode to PC Remote, "
+            "reconnect the cable, and close Imaging Edge/Photos."
+        )
+    if len(cameras) != 1:
+        raise SystemExit("More than one Sony PTP camera was found.")
+    return cameras[0]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -83,49 +134,83 @@ def main():
     args = parser.parse_args()
     sys.path.insert(0, str(args.pmca_root.resolve()))
 
-    from pmca.commands.usb import getDevice, importDriver
-    from pmca.usb.sony import SonyMtpExtCmdDevice
+    from pmca.commands.usb import importDriver
+    from pmca.usb import MtpDevice
+    from pmca.usb.driver import USB_CLASS_PTP
+    from pmca.usb.driver.generic import GenericUsbException
 
-    with importDriver() as drivers:
-        device = getDevice(drivers)
-        if device is None:
-            raise SystemExit(1)
-        if not isinstance(device, SonyMtpExtCmdDevice):
-            raise SystemExit(
-                "Camera must be connected in MTP mode; no writes were attempted."
+    try:
+        with importDriver() as drivers:
+            device, info = find_sony_ptp_device(drivers, MtpDevice, USB_CLASS_PTP)
+            print("Camera: %s %s" % (info.manufacturer, info.model))
+            print("PTP vendor extension: %s" % info.vendorExtension)
+
+            required = {SONY_SDIO_CONNECT, SONY_SDIO_GET_EXT_DEVICE_INFO}
+            if not required.issubset(info.operationsSupported):
+                raise SystemExit(
+                    "The camera is in file-transfer MTP mode, not PC Remote mode. "
+                    "No Sony remote command was sent. Change USB Connection Mode "
+                    "to PC Remote, reconnect, and run the probe again."
+                )
+
+            print("Sony SDIO handshake: phase 1")
+            read_command(device, SONY_SDIO_CONNECT, [1, 0, 0])
+            print("Sony SDIO handshake: phase 2")
+            read_command(device, SONY_SDIO_CONNECT, [2, 0, 0])
+            ext_data = read_command(device, SONY_SDIO_GET_EXT_DEVICE_INFO, [0xC8])
+            version, properties, controls, trailing = parse_extended_device_info(ext_data)
+            print("Sony protocol version: 0x%04x" % version)
+            print("Advertised properties: %d" % len(properties))
+            print("Advertised controls: %d" % len(controls))
+            if trailing:
+                print("Extended-info trailing bytes: %s" % trailing.hex())
+            print("Sony SDIO handshake: phase 3")
+            read_command(device, SONY_SDIO_CONNECT, [3, 0, 0])
+
+            advertised = SONY_LOG_SHOOTING_MODE in properties
+            controlled = SONY_LOG_SHOOTING_MODE in controls
+            print(
+                "Log Shooting 0x%04x advertised: %s"
+                % (SONY_LOG_SHOOTING_MODE, "yes" if advertised else "no")
             )
+            print(
+                "Log Shooting 0x%04x controllable: %s"
+                % (SONY_LOG_SHOOTING_MODE, "yes" if controlled else "no")
+            )
+            if not advertised:
+                print(
+                    "The official Sony PC Remote surface does not publish the "
+                    "Log Shooting property on this camera/mode."
+                )
+                print("Read-only probe complete; no property was changed.")
+                return
 
-        response, descriptor_data = device.driver.sendReadCommand(
-            PTP_OC_GET_DEVICE_PROP_DESC,
-            [PTP_DPC_SONY_LOG_SHOOTING_MODE],
-        )
-        device._checkResponse(response)
-        descriptor = parse_descriptor(descriptor_data)
+            descriptor_data = read_command(
+                device, SONY_GET_DEVICE_PROP_DESC, [SONY_LOG_SHOOTING_MODE]
+            )
+            descriptor = parse_descriptor(descriptor_data)
 
-        response, value_data = device.driver.sendReadCommand(
-            PTP_OC_GET_DEVICE_PROP_VALUE,
-            [PTP_DPC_SONY_LOG_SHOOTING_MODE],
+            print("Property: 0x%04x" % descriptor["property_code"])
+            print(
+                "Datatype: %s (0x%04x)"
+                % (descriptor["datatype_name"], descriptor["datatype"])
+            )
+            print("Writable: %s" % ("yes" if descriptor["writable"] else "no"))
+            print("Sony status byte: 0x%02x" % descriptor["status"])
+            print("Factory value: %s" % descriptor["factory"])
+            print("Current value: %s" % descriptor["current"])
+            if "enum" in descriptor:
+                print("Allowed values: %s" % descriptor["enum"])
+            if "range" in descriptor:
+                print("Range (min, max, step): %s" % (descriptor["range"],))
+            if descriptor["trailing"]:
+                print("Descriptor raw: %s" % descriptor_data.hex())
+            print("Read-only probe complete; no property was changed.")
+    except GenericUsbException:
+        raise SystemExit(
+            "A USB endpoint stalled. Confirm PC Remote mode, reconnect the "
+            "camera, close any camera-control app, and run the probe again."
         )
-        device._checkResponse(response)
-        value, consumed = unpack_value(value_data, 0, descriptor["datatype"])
-
-        print("Property: 0x%04x" % descriptor["property_code"])
-        print(
-            "Datatype: %s (0x%04x)"
-            % (descriptor["datatype_name"], descriptor["datatype"])
-        )
-        print("Writable: %s" % ("yes" if descriptor["writable"] else "no"))
-        print("Factory value: %s" % descriptor["factory"])
-        print("Descriptor current value: %s" % descriptor["current"])
-        print("Live value: %s" % value)
-        if "enum" in descriptor:
-            print("Allowed values: %s" % descriptor["enum"])
-        if "range" in descriptor:
-            print("Range (min, max, step): %s" % (descriptor["range"],))
-        if descriptor["trailing"] or value_data[consumed:]:
-            print("Descriptor raw: %s" % descriptor_data.hex())
-            print("Value raw: %s" % value_data.hex())
-        print("Read-only probe complete; no property was changed.")
 
 
 if __name__ == "__main__":

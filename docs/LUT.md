@@ -110,19 +110,26 @@ property `0xE0E3` for Log Shooting Mode. Querying its descriptor is a safer way
 to determine whether the A7 IV exposes the official setter path than guessing
 more backup-property dependencies.
 
-Exit service mode, set **USB Connection Mode** to **MTP**, reconnect the camera,
-and run from this research repository:
+Exit service mode, set **USB Connection Mode** to **PC Remote**, reconnect the
+camera, close Imaging Edge/Photos if either app claims the camera, and run from
+this research repository:
 
 ```bash
 sudo ./../Sony-PMCA-RE/venv/bin/python scripts/a7iv_ptp_log_probe.py
 ```
 
-The probe requests only `GetDevicePropDesc` and `GetDevicePropValue`. It does
-not implement or issue `SetDevicePropValue`. Record the complete output. A
-successful writable descriptor with values including `1` would justify a
-separate, reviewable experiment through Sony's setter path. An unsupported or
-read-only response would confirm that the A7 IV's remote surface also gates the
-feature.
+The probe verifies that Sony's PC Remote operations are advertised, performs
+the read-only SDIO negotiation (`0x9201`, `0x9202`), and asks for the `0xE0E3`
+descriptor with Sony operation `0x9203` only if that property is advertised.
+It does not implement or issue a setter. Record the complete output. A writable
+descriptor with values including `1` would justify a separate, reviewable
+experiment through Sony's coordinated setter path. If `0xE0E3` is absent, the
+A7 IV's official PC Remote surface gates the feature too.
+
+File-transfer **MTP** and **PC Remote** both use a PTP-class USB interface, but
+they expose different operations. Standard PTP `GetDevicePropDesc` (`0x1014`)
+in file-transfer MTP mode stalls on the A7 IV; that is a mode/protocol mismatch,
+not a failed camera connection.
 
 ## Original isolated experiment
 

@@ -95,8 +95,12 @@ substitute.
 
 The same binary contains `to_remote_event_select_log_shooting`, indicating a
 PTP/remote-event route into the model layer. `scripts/a7iv_ptp_log_probe.py`
-performs a read-only descriptor/value query for Sony Log Shooting Mode property
-`0xE0E3`; it intentionally contains no setter operation.
+performs Sony's read-only PC Remote handshake and checks whether the camera
+advertises the Log Shooting Mode property `0xE0E3`; it intentionally contains
+no setter operation. An initial test in file-transfer MTP mode reached the
+camera but stalled on standard PTP `GetDevicePropDesc` (`0x1014`). Sony remote
+control instead requires PC Remote mode and the vendor operations `0x9201`,
+`0x9202`, and `0x9203`.
 
 ## Log Shooting model-family evidence
 
