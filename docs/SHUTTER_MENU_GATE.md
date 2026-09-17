@@ -37,6 +37,72 @@ answer is that `0x02cf1702=01` bypasses the absent selector page by setting the
 backing state directly; the icon is evidence that the runtime state was
 accepted, not evidence that the A7 IV menu catalogue contains the FX3 page.
 
+## Why the angle can appear but remain fixed when a dial is turned
+
+Changing `0x02cf1702` selects angle representation. It does not force the
+shutter exposure channel from Auto to Manual, and it does not change which
+physical control is assigned to shutter.
+
+Sony documents a separate activation condition for the FX3: **Angle** is
+active only in Shutter Priority, Manual Exposure, or Flexible Exposure when
+the shutter is set to Manual. [Sony FX3 Shutter Mode][fx3-shutter] The A7 IV
+already has the corresponding exposure controls. In Flexible Exposure, Sony
+documents **Tv Auto/Manual Switch** under **Auto/Manual Swt. Set.** and assigns
+shutter adjustment to the **control wheel**, rather than the front or rear
+dial. [Sony A7 IV Auto/Manual Swt. Set.][a7-auto-manual] Sony also documents
+that Flexible Exposure treats aperture, shutter, and ISO as independently
+automatic or manual channels. [Sony A7 IV Exposure Ctrl Type][a7-exposure]
+
+The first in-camera test should therefore be one of these:
+
+1. Set the Still/Movie/S&Q selector to Movie, set **Exposure Ctrl Type** to
+   **P/A/S/M Mode**, choose **M** or **S**, and turn the control assigned to
+   shutter/Tv.
+2. Set **Exposure Ctrl Type** to **Flexible Exp. Mode**, open **Exposure/Color
+   → Exposure → Auto/Manual Swt. Set.**, change **Tv Auto/Manual Switch** to
+   **Manual**, and turn the **control wheel**. On the documented default movie
+   assignments, C4 toggles Tv Auto/Manual.
+
+The A7 IV binary supports this interpretation. It contains separate generated
+actions for ordinary shutter drive and angle drive:
+
+```text
+0x4c5db05  FUNC_set_shut_drive_seq
+0x4c5db1d  FUNC_set_shut_drive_seq_angle
+0x4c5db3b  FUNC_shutter_angle_next_seq
+0x4c5db57  FUNC_shutter_angle_prev_seq
+```
+
+Its internal action-name block additionally contains
+`set_shut_drive_seq_angle_value`,
+`set_is_shutter_speed_min_max_for_angle`, `shutter_angle_next_seq`, and
+`shutter_angle_prev_seq` at `0x4fb2b77`–`0x4fb2bd4`. A dedicated model class,
+`sequence_set_shut_drive_for_shutter_angle`, is present at `0x4be91a0`; its
+vtable is at `0x59d83c0` and reaches the shared drive runner at `0x35436ac`.
+The FX3 comparison build also has the four generated actions, at
+`0x39c6671`–`0x39c66c3`.
+
+The A7 IV also contains the manual/automatic shutter parameter and its
+exposure-mode exclusion data:
+
+```text
+0x4c44309  PRM_setting_shutter_speed_a_m_switching
+0x4c44355  PRM_HAITA_setting_shutter_speed_a_m_switching_exposure_mode
+0x4d9c9db  ...SHUTTER_SPEED_A_M_SWITCHING_AUTO
+0x4d9ca24  ...SHUTTER_SPEED_A_M_SWITCHING_MANUAL
+0x4d9cca6  ...AUTO_FLEXIBLE_EXPOSURE_MODE
+0x4d9cd1a  ...MANUAL_FLEXIBLE_EXPOSURE_MODE
+```
+
+This proves that the angle-drive actions and the Auto/Manual exposure gate are
+compiled into A7 IV 6.02. It does not yet prove the exact branch taken for a
+specific dial event. If the angle still cannot be changed in **M**, **S**, or
+Flexible Exposure with Tv explicitly set to **Manual**, that result would
+indicate a second product/input-dispatch gate. The useful diagnostic would then
+be to read `0x02cf1704` before and after several control-wheel steps: a changed
+property with a fixed display would identify a UI refresh problem, while an
+unchanged property would identify blocked input dispatch.
+
 ## Official behavior is product-specific
 
 Sony documents the A7 IV and FX3 differently even when the shooting-mode dial
@@ -236,3 +302,5 @@ name length.
 [a7-defaults]: https://helpguide.sony.net/ilc/2110/v1/en/contents/TP1001803633.html
 [fx3-shutter]: https://helpguide.sony.net/ilc/2210/v1/en/contents/TP1001690662.html
 [fx3-menu]: https://helpguide.sony.net/ilc/2210/v1/en/contents/TP1000888827.html
+[a7-auto-manual]: https://helpguide.sony.net/ilc/2110/v1/en/contents/TP1000657953.html
+[a7-exposure]: https://helpguide.sony.net/ilc/2110/v1/en/contents/TP1000657954.html
