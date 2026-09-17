@@ -239,6 +239,39 @@ the set-property commands (`0x9205` or `0x9207`) and does not alter camera
 state. The resulting JSON lets us compare the live USB model with the compiled
 `ptp_shutter_*` strings without guessing property numbers.
 
+#### A7 IV 6.02 protocol-3 result
+
+The physical A7 IV was captured with `0x02cf1702=01` and `180°` visible. It
+accepted protocol 3.00 and returned:
+
+```text
+advertised properties       404
+advertised controls          57
+aggregate descriptor count  361
+aggregate bytes             9054
+```
+
+`scripts/analyze_ptp_snapshot.py` decoded all 361 descriptors and consumed
+exactly all 9,054 bytes. No default, current, range, primary enumeration, or
+secondary enumeration contained `180000`, the Remote SDK representation of
+180 degrees. There was likewise no advertised angle-value enumeration. The
+result is reproducible with:
+
+```bash
+python3 scripts/analyze_ptp_snapshot.py \
+  ~/Documents/a7iv-ptp-angle-on.json \
+  --output ~/Documents/a7iv-ptp-angle-on-decoded.json
+```
+
+This rules out a currently advertised, supported PC Remote shutter-angle
+setter on this A7 IV, even while the internal angle formatter is active. It
+does not prove that every disabled zero-valued descriptor is unrelated, since
+Sony can represent an unavailable property with a sentinel value. Combined
+with Sony's product support distinction and the body-input HAITA guard, the
+strongest interpretation is that the A7 IV product layer filters the live
+angle property before both UI input and USB exposure. A comparison snapshot
+from an FX3 would identify the missing property codes directly.
+
 ## Official behavior is product-specific
 
 Sony documents the A7 IV and FX3 differently even when the shooting-mode dial
