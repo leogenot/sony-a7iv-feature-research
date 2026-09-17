@@ -70,10 +70,28 @@ Shutter-angle icon visible in Movie mode
 FX3-style Shutter Mode menu remains hidden
 ```
 
-The first Custom LUT activation test (`0x02cf1443: 00 -> 01`) did not expose
-Flexible ISO. Its immediate, post-sync, and post-boot readback states have not
-yet been recorded, so this result does not yet distinguish write rejection,
-boot-time normalization, and a separate UI/support gate.
+The first Custom LUT activation test produced:
+
+```text
+0x02cf1443 initial:       00
+0x02cf1443 immediate:     01
+0x02cf1443 after bk s:    01
+0x02cf1443 after reboot:  01
+Flexible ISO menu:        absent
+```
+
+This rules out backup-write rejection and boot-time normalization. A separate
+runtime or menu-support condition blocks the visible feature.
+
+Static analysis also explains why a retained backup byte may be insufficient.
+The application's `model::model_api::detail::set_log_shooting()` path (around
+VA `0x270b990`) first updates the Log Shooting model property, then branches on
+all four Log Shooting values and dispatches additional model/sequence changes.
+Writing `0x02cf1443` through `bk w` changes the persisted property directly and
+does not execute that coordinated setter path. The remaining work is therefore
+to identify the narrow dependent state or a callable event that invokes the
+official setter; changing the global product-model value is not an equivalent
+substitute.
 
 ## Log Shooting model-family evidence
 

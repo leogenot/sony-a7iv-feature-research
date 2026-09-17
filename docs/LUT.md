@@ -14,10 +14,10 @@ The A7 IV 6.02 firmware contains the full software-side LUT implementation:
 - embedded-LUT metadata handling
 
 The software implementation is present, but the first direct activation test
-did not expose Flexible ISO on the physical A7 IV. The next step is to classify
-whether the setting is rejected, normalized during boot, or retained while its
-menu remains hidden. Keep this experiment separate from the shutter-angle
-change.
+did not expose Flexible ISO on the physical A7 IV. Readback proved that the
+camera accepts `0x02cf1443=01`, saves it, and retains it across a cold boot.
+Therefore a separate runtime or UI-support condition blocks the feature. Keep
+this experiment separate from the shutter-angle change.
 
 ## Main properties
 
@@ -59,6 +59,19 @@ unproven. There is also no positive A7 IV evidence for Cine EI values `02` or
 
 ## Readback diagnostic
 
+Physical-camera result on firmware 6.02:
+
+```text
+initial read:       00
+immediate read:     01
+read after bk s:    01
+read after reboot:  01
+visible menu:       absent
+```
+
+This classifies the result as a retained property with a separate runtime/UI
+gate. The sequence below is preserved for reproducibility.
+
 Run this sequence in one service-shell session and record every result:
 
 ```text
@@ -83,7 +96,7 @@ Interpretation:
 | --- | --- |
 | Immediate readback is `00` | The write was rejected or immediately normalized. |
 | Immediate and post-sync reads are `01`, post-boot read is `00` | Startup/model validation reset the setting. |
-| Post-boot read remains `01`, no menu appears | The persisted state was accepted, but a separate runtime or UI support gate hides/disables the feature. |
+| Post-boot read remains `01`, no menu appears | **Observed:** the persisted state was accepted, but a separate runtime or UI support gate hides/disables the feature. |
 
 Do not change the camera product-model value to bypass the gate. Product model
 selects many hardware and UI parameter tables at once and is not a narrow LUT
@@ -117,8 +130,8 @@ bk s
 exit
 ```
 
-The first test did not expose Flexible ISO. If readback remains `01` after a
-cold reboot, inspect Movie mode for:
+The first test retained `01` but did not expose Flexible ISO. Inspecting Movie
+mode produced no visible Log Shooting setting.
 
 - Log Shooting Setting
 - Select LUT
