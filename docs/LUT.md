@@ -102,6 +102,28 @@ Do not change the camera product-model value to bypass the gate. Product model
 selects many hardware and UI parameter tables at once and is not a narrow LUT
 switch.
 
+## Read-only PTP setter-path probe
+
+Firmware 6.02 contains a remote-event conversion path named
+`to_remote_event_select_log_shooting`. Sony's PTP remote surface uses device
+property `0xE0E3` for Log Shooting Mode. Querying its descriptor is a safer way
+to determine whether the A7 IV exposes the official setter path than guessing
+more backup-property dependencies.
+
+Exit service mode, set **USB Connection Mode** to **MTP**, reconnect the camera,
+and run from this research repository:
+
+```bash
+sudo ./../Sony-PMCA-RE/venv/bin/python scripts/a7iv_ptp_log_probe.py
+```
+
+The probe requests only `GetDevicePropDesc` and `GetDevicePropValue`. It does
+not implement or issue `SetDevicePropValue`. Record the complete output. A
+successful writable descriptor with values including `1` would justify a
+separate, reviewable experiment through Sony's setter path. An unsupported or
+read-only response would confirm that the A7 IV's remote surface also gates the
+feature.
+
 ## Original isolated experiment
 
 Read and record the current settings:

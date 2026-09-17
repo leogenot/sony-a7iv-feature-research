@@ -93,6 +93,11 @@ to identify the narrow dependent state or a callable event that invokes the
 official setter; changing the global product-model value is not an equivalent
 substitute.
 
+The same binary contains `to_remote_event_select_log_shooting`, indicating a
+PTP/remote-event route into the model layer. `scripts/a7iv_ptp_log_probe.py`
+performs a read-only descriptor/value query for Sony Log Shooting Mode property
+`0xE0E3`; it intentionally contains no setter operation.
+
 ## Log Shooting model-family evidence
 
 The A7 IV 6.02 update stores its matching backup profiles under
