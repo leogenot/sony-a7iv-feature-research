@@ -133,6 +133,36 @@ the A7 IV's M-mode dial-routing path. Failure there would indicate that the
 shared angle action remains inhibited after only setting
 `BKID_APP_SETTING_MODE_SHUTTER`.
 
+### Touch-editor result: formatter and editor are split
+
+The Flexible Exposure/control-wheel test also left the displayed value fixed
+at `180°`. Tapping that value opened the ordinary shutter-speed editor, with
+entries such as `1/30` and `1/50`. Choosing a speed closed the editor while the
+footer continued to show `180°`; `0x02cf1704` remained unchanged.
+
+This separates two pieces of the implementation:
+
+- `BKID_APP_SETTING_MODE_SHUTTER=01` reaches the footer formatter, which renders
+  the stored angle value and angle icon.
+- The A7 IV touch target remains bound to the ordinary shutter-speed editor,
+  and dial events likewise do not reach the angle next/previous actions.
+
+The binary contains all three nearby UI action keys:
+
+```text
+UIBIZ_KEY_TACT_SHUTTER_SPEED
+UIBIZ_KEY_TACT_SHUTTER_MODE
+UIBIZ_KEY_TACT_SHUTTER_SELECT
+```
+
+It also contains `model::model_extern::extern_BKID_APP_EXTERN_SHUTTER_MODE()`.
+That bridge reads the shutter-mode model value, accepts both `0` and `1`, and
+publishes event `0x1d5a`. However, there is no separately named
+`BKID_APP_*SHUTTER_SELECT` backup property to switch the footer touch target.
+The evidence therefore no longer supports a complete in-camera activation by
+changing only `0x02cf1702`; a product-specific UI/action binding or executable
+patch remains to be identified.
+
 ## Official behavior is product-specific
 
 Sony documents the A7 IV and FX3 differently even when the shooting-mode dial
