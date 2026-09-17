@@ -11,6 +11,31 @@ before encoding.
 No tested backup-property change enables Open Gate recording. Do not interpret
 the shared scan-mode names as an unlock by themselves.
 
+## Likely reference product: FX5
+
+Sony's published FX5 description uses the same set of scan modes found in the
+A7 IV shared application: full-frame 5K 3:2, full-frame 5K 16:9, and
+full-frame 5K 17:9. Sony also states that FX5 Open Gate recording is available
+only with X-OCN. [Sony FX5 Open Gate description][fx5-open-gate]
+
+The A7 IV `appFw.so` contains generic X-OCN selection names as well:
+
+```text
+SELECT_CODEC_X_OCN_LT
+SELECT_CODEC_X_OCN_LL1
+SELECT_CODEC_X_OCN_LL2
+set_select_codec_for_exclusion_x_ocn_lt
+set_select_codec_for_exclusion_x_ocn_ll1
+set_select_codec_for_exclusion_x_ocn_ll2
+```
+
+It also contains more than twenty `PRODUCT_MODEL_*` classes. Taken together,
+this strongly suggests that the application packages model-shared cinema
+support which is selected by product tables. The A7 IV does not expose X-OCN
+as a recording format, and its documented XAVC recorder has no 5K 3:2 mode.
+Therefore the exact 5K 3:2 strings are more plausibly part of the FX5 or a
+related product path than a hidden A7 IV XAVC setting.
+
 ## Positive firmware evidence
 
 `appFw.so` contains the following exact strings:
@@ -107,6 +132,11 @@ configuration. A viable recording path needs all of the following:
 Until the encoder path is found, the evidence supports dormant shared imager
 machinery rather than a usable hidden Open Gate mode.
 
+The current probability of a settings-only unlock is low. Establishing a
+usable A7 IV mode would require proving that the LAX product path can select
+the scan mode and that its hardware/recorder can use a non-X-OCN 3:2 output.
+Changing an `EXTERN_MENU` byte cannot establish either requirement.
+
 ## Reproduction
 
 ```bash
@@ -126,3 +156,4 @@ python3 scripts/analyze_ptp_snapshot.py \
 ```
 
 [a7-movie-settings]: https://helpguide.sony.net/ilc/2110/v1/en/contents/TP1000640834.html
+[fx5-open-gate]: https://electronics.sony.com/imaging/cinema-line-cameras/all-cinema-line-cameras/p/ilmefx5b
