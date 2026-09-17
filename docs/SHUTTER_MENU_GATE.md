@@ -270,6 +270,46 @@ and rebooting into PC Remote mode. A descriptor-level diff will then show
 whether angle mode exposes a new property, changes a current value or enable
 flag, or leaves the entire remote surface unchanged.
 
+#### A7 IV 6.02 angle-mode comparison
+
+The physical angle-enabled capture also negotiated protocol 3.00 and returned
+the same 404 advertised properties, 57 controls, and 361 aggregate
+descriptors. Its aggregate data was 8,139 bytes and decoded exactly. No
+descriptor contained `180000`.
+
+Two changes are specific to shutter control:
+
+| Property | Speed-mode capture | Angle-enabled capture |
+| --- | --- | --- |
+| `0xd20d` (`PTP_DPC_SONY_ShutterSpeed`) | enabled, current `0x00010032` (1/50), 37 values | disabled, current `0xffffffff`, no values |
+| `0xd19f` (newer 64-bit shutter-speed value) | enabled, current `0x0000000100000032` (1/50), 37 values | disabled, current `0xffffffffffffffff`, no values |
+
+No property was added or removed. In particular, the angle-enabled capture did
+not expose a replacement descriptor containing the current 180-degree value.
+This is direct evidence that the backup change reaches a distinct shutter
+state while the A7 IV's PC Remote surface withholds the angle-value control.
+
+Sony's [Camera Remote SDK device matrix][sdk-property-list] agrees with that observation. It marks
+`Shutter Mode Setting` as supported on ILCE-7M4, but marks `Shutter Angle`,
+`Shutter Mode`, `Shutter Mode Status`, `Shutter Speed Value`, and `Shutter
+Speed Current Value` unsupported on that model. The latter properties are
+listed for cinema bodies including ILME-FX3.
+
+The two captures also differ in aperture, ISO, and groups of other shooting
+properties. Those changes make the newly enabled unrelated property IDs poor
+candidates for the angle setter. A final controlled A/B should keep the camera
+in Movie, Manual Exposure, with the same aperture, ISO, frame rate, and USB
+mode, and change only backup property `0x02cf1702` between captures.
+
+The repository comparison command is:
+
+```bash
+python3 scripts/compare_ptp_snapshots.py \
+  ~/Documents/a7iv-ptp-speed.json \
+  ~/Documents/a7iv-ptp-angle-on.json \
+  --enablement-only
+```
+
 ## Official behavior is product-specific
 
 Sony documents the A7 IV and FX3 differently even when the shooting-mode dial
@@ -423,10 +463,9 @@ it is not sufficient to identify the responsible predicate.
 
 There are now two concrete targets:
 
-1. Capture the read-only PC Remote property inventory with angle mode active.
-   If shutter mode/angle properties are advertised, their descriptor values
-   provide a supported live-model route to trace. If they are absent, that is
-   evidence that the A7 IV product surface filters them before USB exposure.
+1. Repeat the speed/angle inventory as a controlled A/B with every visible
+   shooting setting held constant. This will isolate changes caused by
+   `0x02cf1702` from aperture, ISO, and shooting-mode differences.
 2. Trace the writers feeding HAITA getter `0x293d634`, then compare their
    product-model inputs for `PRODUCT_MODEL_LAX` and `PRODUCT_MODEL_ALCIN_UUD`.
    This is more direct than patching angle arithmetic, which already exists.
@@ -481,3 +520,4 @@ name length.
 [fx3-menu]: https://helpguide.sony.net/ilc/2210/v1/en/contents/TP1000888827.html
 [a7-auto-manual]: https://helpguide.sony.net/ilc/2110/v1/en/contents/TP1000657953.html
 [a7-exposure]: https://helpguide.sony.net/ilc/2110/v1/en/contents/TP1000657954.html
+[sdk-property-list]: https://amarburg.github.io/sony_remote_camera_sdk/function_list/device_property_list.html
