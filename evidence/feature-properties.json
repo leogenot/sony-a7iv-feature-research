@@ -1,0 +1,59 @@
+[
+  {
+    "name": "BKID_APP_SETTING_MODE_SHUTTER",
+    "internal_id": "0x1702",
+    "property_id": "0x02cf1702",
+    "constructor_references": ["0x2fceda0", "0x312b44c"],
+    "size": 1,
+    "default_hex": "00",
+    "attributes": "0x60",
+    "status": "verified on camera with value 01"
+  },
+  {
+    "name": "BKID_APP_SETTING_SHUTTER_ANGLE",
+    "internal_id": "0x1704",
+    "property_id": "0x02cf1704",
+    "constructor_references": ["0x2fcee50", "0x312b494"],
+    "size": 1,
+    "default_hex": "10",
+    "attributes": "0x60"
+  },
+  {
+    "name": "BKID_APP_SETTING_LOG_SHOOTING",
+    "internal_id": "0x1443",
+    "property_id": "0x02cf1443",
+    "constructor_references": ["0x2fcb5f0", "0x3129d6c"],
+    "size": 1,
+    "default_hex": "00",
+    "attributes": "0x60",
+    "status": "activation pending"
+  },
+  {
+    "name": "BKID_APP_SETTING_EMBED_LUT_FILE",
+    "internal_id": "0x1447",
+    "property_id": "0x02cf1447",
+    "constructor_references": ["0x2fcb6a0", "0x3129db4"],
+    "size": 1,
+    "default_hex": "01",
+    "attributes": "0x60"
+  },
+  {
+    "name": "BKID_APP_SETTING_SELECT_LUT",
+    "internal_id": "0x1453",
+    "property_id": "0x02cf1453",
+    "constructor_references": ["0x2fcfe78", "0x312bb34"],
+    "size": 1,
+    "default_hex": "01",
+    "attributes": "0x60"
+  },
+  {
+    "name": "BKID_APP_SETTING_APPLY_LUT",
+    "internal_id": "0x1456",
+    "property_id": "0x02cf1456",
+    "constructor_references": ["0x2fd5378", "0x312deec"],
+    "size": 1,
+    "default_hex": "01",
+    "attributes": "0x40"
+  }
+]
+

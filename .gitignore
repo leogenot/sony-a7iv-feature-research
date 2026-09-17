@@ -1,0 +1,34 @@
+# Local Python environments
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Sony firmware/update files and extracted proprietary contents
+*.DAT
+*.dat
+*.bin
+*.img
+*.elf
+*.so
+unpacked/
+extracted/
+firmware*/
+live-dump*/
+a7iv-live-dump*/
+dump-index.jsonl
+
+# Per-camera state and identifiers
+*backup*.bin
+*preset*.bin
+device-info*
+serial*
+
+# Generated analysis output
+feature-property-trace.json
+
+# macOS/editor files
+.DS_Store
+.idea/
+.vscode/
+
