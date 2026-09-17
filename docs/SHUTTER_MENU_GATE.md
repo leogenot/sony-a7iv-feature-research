@@ -239,10 +239,11 @@ the set-property commands (`0x9205` or `0x9207`) and does not alter camera
 state. The resulting JSON lets us compare the live USB model with the compiled
 `ptp_shutter_*` strings without guessing property numbers.
 
-#### A7 IV 6.02 protocol-3 result
+#### A7 IV 6.02 protocol-3 speed-mode baseline
 
-The physical A7 IV was captured with `0x02cf1702=01` and `180°` visible. It
-accepted protocol 3.00 and returned:
+The first physical A7 IV protocol-3 capture was made with shutter-angle mode
+**off** (`0x02cf1702=00`). It is therefore the speed-mode baseline, not an
+angle-enabled result. The camera accepted protocol 3.00 and returned:
 
 ```text
 advertised properties       404
@@ -252,25 +253,22 @@ aggregate bytes             9054
 ```
 
 `scripts/analyze_ptp_snapshot.py` decoded all 361 descriptors and consumed
-exactly all 9,054 bytes. No default, current, range, primary enumeration, or
-secondary enumeration contained `180000`, the Remote SDK representation of
-180 degrees. There was likewise no advertised angle-value enumeration. The
-result is reproducible with:
+exactly all 9,054 bytes. As expected for this baseline, no default, current,
+range, primary enumeration, or secondary enumeration contained `180000`, the
+Remote SDK representation of 180 degrees. The result is reproducible with:
 
 ```bash
 python3 scripts/analyze_ptp_snapshot.py \
-  ~/Documents/a7iv-ptp-angle-on.json \
-  --output ~/Documents/a7iv-ptp-angle-on-decoded.json
+  ~/Documents/a7iv-ptp-speed.json \
+  --output ~/Documents/a7iv-ptp-speed-decoded.json
 ```
 
-This rules out a currently advertised, supported PC Remote shutter-angle
-setter on this A7 IV, even while the internal angle formatter is active. It
-does not prove that every disabled zero-valued descriptor is unrelated, since
-Sony can represent an unavailable property with a sentinel value. Combined
-with Sony's product support distinction and the body-input HAITA guard, the
-strongest interpretation is that the A7 IV product layer filters the live
-angle property before both UI input and USB exposure. A comparison snapshot
-from an FX3 would identify the missing property codes directly.
+This baseline cannot establish whether the PC Remote surface changes when the
+internal angle formatter is active. The required comparison is an otherwise
+identical capture after setting `0x02cf1702=01`, verifying `180°` on screen,
+and rebooting into PC Remote mode. A descriptor-level diff will then show
+whether angle mode exposes a new property, changes a current value or enable
+flag, or leaves the entire remote surface unchanged.
 
 ## Official behavior is product-specific
 
