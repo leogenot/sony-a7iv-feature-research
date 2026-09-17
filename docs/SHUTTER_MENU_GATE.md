@@ -103,6 +103,25 @@ be to read `0x02cf1704` before and after several control-wheel steps: a changed
 property with a fixed display would identify a UI refresh problem, while an
 unchanged property would identify blocked input dispatch.
 
+### Live dial-block diagnosis
+
+The camera later reported the following live backup settings after the angle
+remained fixed at `0x02cf1704=10`:
+
+```text
+0x02cf024d = 00  setting_movie_exposure_mode_setting = P/A/S/M control
+0x02cf0247 = 00  setting_movie_exposure_mode = Intelligent Auto
+0x02cf02d9 = 01  setting_shutter_speed_a_m_switching = Manual
+0x02cf1549 = 01  shutter_speed_manual_lock_state = Off/unlocked
+```
+
+The Tv channel was therefore already manual and unlocked, but the active movie
+exposure mode was Intelligent Auto. That combination explains the nonzero
+`PRM_HAITA_setting_shutter_speed_a_m_switching_exposure_mode` state checked by
+the angle-drive action. With `0x02cf024d=00`, selecting Movie mode plus physical
+mode-dial **S** or **M** should change `0x02cf0247` to `03` or `04`, respectively,
+and remove this exposure-mode inhibition.
+
 ## Official behavior is product-specific
 
 Sony documents the A7 IV and FX3 differently even when the shooting-mode dial
