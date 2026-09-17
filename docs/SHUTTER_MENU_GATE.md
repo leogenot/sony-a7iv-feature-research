@@ -123,6 +123,9 @@ names also do not, by themselves, prove the numeric encoding. Consequently,
 `0x02cf0247=00` must not be interpreted as proof that the shooting session was
 in Intelligent Auto. The reliable part of this observation is that the stored
 Tv channel is Manual, its manual lock is Off, and `0x02cf1704` did not change.
+The camera owner subsequently verified that `0x02cf0247` remains `00` across
+physical mode-dial selections, confirming that this backup property is not a
+live mode-dial indicator on the A7 IV.
 
 The next discriminating test is Flexible Exposure with Tv explicitly Manual
 and the control wheel. A successful change there would isolate the problem to
