@@ -295,11 +295,27 @@ Sony's [Camera Remote SDK device matrix][sdk-property-list] agrees with that obs
 Speed Current Value` unsupported on that model. The latter properties are
 listed for cinema bodies including ILME-FX3.
 
-The two captures also differ in aperture, ISO, and groups of other shooting
-properties. Those changes make the newly enabled unrelated property IDs poor
-candidates for the angle setter. A final controlled A/B should keep the camera
-in Movie, Manual Exposure, with the same aperture, ISO, frame rate, and USB
-mode, and change only backup property `0x02cf1702` between captures.
+The first two captures also differed in aperture, ISO, and groups of other
+shooting properties. A second speed-mode capture was therefore made with the
+camera otherwise left in the same Movie/Manual configuration. That controlled
+comparison returned 8,955 bytes and again decoded all 361 descriptors exactly.
+
+Only `0xd19f` and `0xd20d` changed enablement in the controlled comparison.
+The matched speed capture reported 1/125 second in both encodings and 34
+settable speed values; angle mode disabled both descriptors, replaced their
+current values with all-ones sentinels, and removed both value lists. No
+property was added, removed, or enabled as an angle replacement. Three other
+descriptors changed only their transient current values: `0xd1b5` moved from
+`-7000` to `-6000`, while `0xd204` and Sony battery-level property
+[`0xd218`][libgphoto-ptp]
+moved from `90` to `88`.
+
+The input evidence hashes are:
+
+```text
+6a38324c2145aeff95f02e9a8293862f1f9486b72947c96c72c7f49b822a6ce1  a7iv-ptp-speed-matched.json
+d7250328d0d3c3ab76f9b38f5653e1c3b3424dc6424b5880010dfb056a0d68d5  a7iv-ptp-angle-on.json
+```
 
 The repository comparison command is:
 
@@ -463,9 +479,9 @@ it is not sufficient to identify the responsible predicate.
 
 There are now two concrete targets:
 
-1. Repeat the speed/angle inventory as a controlled A/B with every visible
-   shooting setting held constant. This will isolate changes caused by
-   `0x02cf1702` from aperture, ISO, and shooting-mode differences.
+1. Trace the A7 IV product filter that omits the angle-value and angle-status
+   properties from the protocol-3 descriptor generator. The controlled USB
+   comparison establishes that no alternate property replaces shutter speed.
 2. Trace the writers feeding HAITA getter `0x293d634`, then compare their
    product-model inputs for `PRODUCT_MODEL_LAX` and `PRODUCT_MODEL_ALCIN_UUD`.
    This is more direct than patching angle arithmetic, which already exists.
@@ -510,6 +526,7 @@ name length.
 | `0x02cf1702` changes the backing shutter mode without adding a menu node | High, based on the observed camera result plus matching firmware parameters |
 | The runtime/action implementation for shutter angle exists in A7 IV 6.02 | High |
 | The angle-mode dial path contains a generated HAITA availability guard before the setter | High |
+| Angle mode disables both exposed speed descriptors without exposing an angle replacement | High, from the controlled protocol-3 A/B capture |
 | The exact input which keeps that HAITA state asserted on the A7 IV | Not yet established |
 | A finer product-specific menu catalogue/composition path suppresses the A7 IV page | Medium-high |
 | Exact function/table/patch responsible for the omission | Not yet established |
@@ -521,3 +538,4 @@ name length.
 [a7-auto-manual]: https://helpguide.sony.net/ilc/2110/v1/en/contents/TP1000657953.html
 [a7-exposure]: https://helpguide.sony.net/ilc/2110/v1/en/contents/TP1000657954.html
 [sdk-property-list]: https://amarburg.github.io/sony_remote_camera_sdk/function_list/device_property_list.html
+[libgphoto-ptp]: https://github.com/gphoto/libgphoto2/blob/master/camlibs/ptp2/ptp.h
