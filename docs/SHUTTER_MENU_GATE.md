@@ -33,9 +33,9 @@ flag:
 
 The exact menu-node table or predicate has not yet been identified. It would
 be unsafe to name a patch address from the current evidence. The practical
-answer is that `0x02cf1702=01` bypasses the absent selector page by setting the
-backing state directly; the icon is evidence that the runtime state was
-accepted, not evidence that the A7 IV menu catalogue contains the FX3 page.
+answer is that `0x02cf1702=01` changes the backing display state directly; the
+icon is evidence that the formatter accepted angle mode, not evidence that the
+A7 IV enabled the FX3 control route or menu page.
 
 ## Why the angle can appear but remain fixed when a dial is turned
 
@@ -95,13 +95,10 @@ exposure-mode exclusion data:
 ```
 
 This proves that the angle-drive actions and the Auto/Manual exposure gate are
-compiled into A7 IV 6.02. It does not yet prove the exact branch taken for a
-specific dial event. If the angle still cannot be changed in **M**, **S**, or
-Flexible Exposure with Tv explicitly set to **Manual**, that result would
-indicate a second product/input-dispatch gate. The useful diagnostic would then
-be to read `0x02cf1704` before and after several control-wheel steps: a changed
-property with a fixed display would identify a UI refresh problem, while an
-unchanged property would identify blocked input dispatch.
+compiled into A7 IV 6.02. The subsequent camera tests covered Movie **M** and
+Flexible Exposure with Tv explicitly set to **Manual**. Neither the dial nor
+the control wheel changed `0x02cf1704`, identifying blocked input dispatch
+rather than a display-refresh problem.
 
 ### Service-backup readback limitation
 
@@ -127,11 +124,9 @@ The camera owner subsequently verified that `0x02cf0247` remains `00` across
 physical mode-dial selections, confirming that this backup property is not a
 live mode-dial indicator on the A7 IV.
 
-The next discriminating test is Flexible Exposure with Tv explicitly Manual
-and the control wheel. A successful change there would isolate the problem to
-the A7 IV's M-mode dial-routing path. Failure there would indicate that the
-shared angle action remains inhibited after only setting
-`BKID_APP_SETTING_MODE_SHUTTER`.
+Flexible Exposure with Tv explicitly Manual and the control wheel was then
+tested and also failed. The shared angle action therefore remains inhibited
+after only setting `BKID_APP_SETTING_MODE_SHUTTER`.
 
 ### Touch-editor result: formatter and editor are split
 
@@ -162,6 +157,84 @@ publishes event `0x1d5a`. However, there is no separately named
 The evidence therefore no longer supports a complete in-camera activation by
 changing only `0x02cf1702`; a product-specific UI/action binding or executable
 patch remains to be identified.
+
+### The full angle-adjustment route is present, but guarded
+
+A more detailed control-flow trace confirms that the firmware contains more
+than angle labels and formatting. The A7 IV has a complete dial action for
+changing the angle:
+
+```text
+dial dispatcher 0x1baf328
+  reads shutter mode at 0x28f6e38
+  mode 0 (speed) -> ordinary shutter drive 0x27b4fa4
+  mode 1 (angle) -> test HAITA getter 0x293d634
+                    clear: angle drive 0x26e8b08
+                    set:   unavailable-action feedback 0x26e898c
+
+angle drive 0x26e8b08
+  emits event 0x3fb8 with a signed step
+  positive step -> angle-next worker 0x2593d20
+  negative step -> angle-previous worker 0x2593de4
+```
+
+There are also direct positive and negative call sites at `0x23648b8`,
+`0x2364a34`, `0x2365b20`, and `0x2365c9c`. This makes absence of the angle
+arithmetic or increment/decrement sequence an unlikely explanation for the
+fixed `180°` display.
+
+The guard read at `0x293d634` is generated model state. Cross-references and
+the parallel generated parameter maps identify it as:
+
+```text
+PRM_HAITA_setting_shutter_speed_a_m_switching_exposure_mode
+```
+
+`HAITA` is Sony's generated availability/inhibit layer. It is runtime state,
+not a persisted backup byte with the same name. That explains why setting the
+stored Tv channel to Manual and changing `0x02cf1702` can still leave the dial
+route blocked. The same broad branch structure exists in the FX3 build; the
+important product difference may therefore be how this generated state is
+initialized or refreshed, rather than missing angle code.
+
+The two values published through `UIBIZ_KEY_TACT_SHUTTER_SELECT` were also
+previously easy to misread. Disassembly of handlers `0x26e7130` and
+`0x26e7250` shows that values `1` and `0` select **next** and **previous**
+angle actions. They are direction values, not a second speed/angle selector.
+There is consequently no evidence that writing a hypothetical
+`SHUTTER_SELECT=1` would unlock the mode.
+
+The observed touch behavior adds one independent constraint: the A7 IV footer
+still launches the speed editor. Even if the generated HAITA state were made
+available, that touch target may still require the product's angle editor
+binding. The likely missing pieces are now narrowly defined as runtime
+availability initialization and product UI binding, rather than the angle
+implementation itself.
+
+### Read-only PC Remote inventory
+
+Sony's Camera Remote SDK models shutter mode, shutter angle, shutter mode
+setting, and shutter mode status as distinct live properties. The local
+firmware contains matching remote-event names. A useful next check is whether
+the A7 IV actually advertises any corresponding vendor property while the
+angle flag is active.
+
+The repository includes a read-only inventory tool. Reboot the camera out of
+service mode, choose **USB Connection Mode → PC Remote**, close Imaging Edge
+and Photos, then run:
+
+```bash
+cd ~/Documents/sony-a7iv-feature-research
+sudo ~/Documents/Sony-PMCA-RE/venv/bin/python \
+  scripts/a7iv_ptp_snapshot.py \
+  --output ~/Documents/a7iv-ptp-angle-on.json
+```
+
+The script performs Sony's PC Remote handshake, records the advertised
+property/control codes, and reads their descriptors. It does not invoke the
+set-property commands (`0x9205` or `0x9207`) and does not alter camera state.
+The resulting JSON lets us compare the live USB model with the compiled
+`ptp_shutter_*` strings without guessing property numbers.
 
 ## Official behavior is product-specific
 
@@ -312,19 +385,27 @@ it is not sufficient to identify the responsible predicate.
 - The present analysis found no evidence for a second backup property whose
   sole purpose is to reveal this page.
 
-## Most useful next reverse-engineering target
+## Most useful next reverse-engineering targets
 
-The next target is the code/data that constructs the Exposure menu's ordered
-item list for `PRODUCT_MODEL_LAX`, then compare it with the
-`PRODUCT_MODEL_ALCIN_UUD` path. A sound trace should begin from neighboring
-visible entries such as **Auto Slow Shutter** and **Auto/Manual Swt. Set.**,
-because those provide known nodes on both products. It should not begin by
-patching key ID `0x173`: that ID is already registered and is local to this
-specific build.
+There are now two concrete targets:
 
-Until that menu node and its predicate are identified, direct backup-property
-selection is the only mechanism demonstrated by the current evidence. It
-enables the state but does not reconstruct the FX3 settings page.
+1. Capture the read-only PC Remote property inventory with angle mode active.
+   If shutter mode/angle properties are advertised, their descriptor values
+   provide a supported live-model route to trace. If they are absent, that is
+   evidence that the A7 IV product surface filters them before USB exposure.
+2. Trace the writers feeding HAITA getter `0x293d634`, then compare their
+   product-model inputs for `PRODUCT_MODEL_LAX` and `PRODUCT_MODEL_ALCIN_UUD`.
+   This is more direct than patching angle arithmetic, which already exists.
+
+The Exposure menu's ordered item list remains a separate target for restoring
+the FX3-style settings page. A sound trace should begin from neighboring
+visible entries such as **Auto Slow Shutter** and **Auto/Manual Swt. Set.**.
+It should not begin by patching key ID `0x173`: that key is already registered
+and its number is local to this build.
+
+Until the runtime HAITA input and menu predicate are identified, the backup
+property changes the displayed state but does not provide a working in-camera
+angle control.
 
 ## Reproduction commands
 
@@ -355,6 +436,8 @@ name length.
 | The A7 IV menu item is absent by product design, not merely hidden by the current exposure mode | High |
 | `0x02cf1702` changes the backing shutter mode without adding a menu node | High, based on the observed camera result plus matching firmware parameters |
 | The runtime/action implementation for shutter angle exists in A7 IV 6.02 | High |
+| The angle-mode dial path contains a generated HAITA availability guard before the setter | High |
+| The exact input which keeps that HAITA state asserted on the A7 IV | Not yet established |
 | A finer product-specific menu catalogue/composition path suppresses the A7 IV page | Medium-high |
 | Exact function/table/patch responsible for the omission | Not yet established |
 

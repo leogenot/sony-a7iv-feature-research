@@ -20,7 +20,7 @@ files. Obtain the official update yourself and keep generated data local.
 | Service mode | Verified | PMCA switches the A7 IV from Mass Storage to service mode and authenticates. |
 | Settings backup | Verified | A complete checksum-valid backup can be saved locally before experiments. |
 | Decrypted filesystem read | Verified, read-only | Jiritsu `GET_FILE2` accepts a traversal path and returns files from the running camera. 1,064 update-backed files were independently hash-matched. |
-| Shutter angle | Verified on camera | `0x02cf1702`: `00` speed, `01` angle. Existing `0x02cf1704=10` selects 180°. |
+| Shutter angle | Display verified; adjustment still gated | `0x02cf1702`: `00` speed, `01` angle. Existing `0x02cf1704=10` displays 180°, but A7 IV 6.02 still routes touch/dial control away from the angle setter. |
 | Custom LUT | Implementation verified; runtime gate unresolved | `0x02cf1443=01` is accepted, survives sync and cold boot, but does not expose Flexible ISO. User1–User16 storage, CUBE parsing, selection and display paths exist; a separate runtime/UI condition remains. |
 
 ## Start here
