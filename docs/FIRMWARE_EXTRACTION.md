@@ -54,6 +54,24 @@ The output resolves named `BKID_APP_*` records to service property IDs and
 shows the AArch64 constructor addresses that build each complete
 `0x02cfXXXX` identifier.
 
+## Product matrix and full property inventory
+
+`feature_manager_matrix.py` decodes the per-product feature-manager tables.
+`bkid_inventory.py` resolves every `BKID_APP_*` name record and can join it to
+a private backup and the 32 regional profiles:
+
+```bash
+A7=~/Documents/fwtool.py/unpacked/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked/lib/appFw.so
+python3 ./scripts/feature_manager_matrix.py "$A7" --diff-only
+python3 ./scripts/bkid_inventory.py "$A7" --grep SQUEEZE --constructors \
+  --backup ~/Documents/Sony-PMCA-RE/a7iv-backup-602.bin \
+  --update-root ~/Documents/fwtool.py/unpacked/firmware.tar_unpacked
+```
+
+`appfw_elf.py` provides the shared relocation, name-record, immediate and
+`ADRP` reference helpers, and a small command-line interface. `bk4.py` is a
+dependency-free BK4 reader that verifies checksums and reads both banks.
+
 ## Compare against an enabled camera
 
 FX3 7.02 was used as a positive reference because Sony exposes shutter angle
