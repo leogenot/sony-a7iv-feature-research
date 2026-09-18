@@ -1,5 +1,7 @@
 # Sony A7 IV firmware and feature research
 
+Use this at your own risk, I am not responsible for any damages.
+
 Reproducible notes and tools for studying Sony ILCE-7M4 firmware 6.02 through
 official update files and Sony's USB service mode.
 
