@@ -4,9 +4,10 @@
 
 The A7 IV 6.02 application contains a generic full-frame 5K 3:2 imager path,
 but the extracted update does not establish a complete Open Gate recording
-mode for `PRODUCT_MODEL_LAX` (ILCE-7M4). The strongest evidence currently
-supports an internal sensor/input format which is normally scaled or cropped
-before encoding.
+mode for `PRODUCT_MODEL_LS`, the ILCE-7M4's product class. Earlier revisions
+of this note wrongly said `LAX`; see [Product class](PRODUCT_CLASS.md). The
+strongest evidence currently supports an internal sensor/input format which
+is normally scaled or cropped before encoding.
 
 No tested backup-property change enables Open Gate recording. Do not interpret
 the shared scan-mode names as an unlock by themselves.
@@ -123,7 +124,7 @@ The remaining work is to resolve the model/product predicate that selects
 `IMAGER_SCANMODE_FF_5K_3_2`, then trace its output into the movie-recorder
 configuration. A viable recording path needs all of the following:
 
-1. A `PRODUCT_MODEL_LAX` route to the 5K 3:2 scan mode.
+1. A `PRODUCT_MODEL_LS` route to the 5K 3:2 scan mode.
 2. A recorder/encoder configuration accepting a 3:2 frame instead of reducing
    it to 3840x2160.
 3. Matching buffer, metadata, thermal, media-rate, and playback definitions.
@@ -133,7 +134,7 @@ Until the encoder path is found, the evidence supports dormant shared imager
 machinery rather than a usable hidden Open Gate mode.
 
 The current probability of a settings-only unlock is low. Establishing a
-usable A7 IV mode would require proving that the LAX product path can select
+usable A7 IV mode would require proving that the `LS` product path can select
 the scan mode and that its hardware/recorder can use a non-X-OCN 3:2 output.
 Changing an `EXTERN_MENU` byte cannot establish either requirement.
 

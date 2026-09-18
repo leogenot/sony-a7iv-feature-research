@@ -1,0 +1,965 @@
+{
+ "products": {
+  "0": "LS",
+  "1": "YT",
+  "2": "GL",
+  "3": "LAX",
+  "4": "ALCIN_UUD",
+  "5": "SA",
+  "6": "DZ",
+  "7": "YS",
+  "8": "OS",
+  "9": "PP",
+  "10": "SP",
+  "11": "ATOM",
+  "12": "TAKE_BASIC",
+  "13": "HARRY",
+  "14": "POTTER",
+  "15": "EREN",
+  "16": "CHAPLIN",
+  "17": "LUKE",
+  "18": "ALCIN2",
+  "19": "TK_UUD",
+  "20": "OT_UUD",
+  "21": "NE",
+  "22": "HC",
+  "23": "RS",
+  "24": "MT",
+  "25": "DOC",
+  "26": "SL"
+ },
+ "feature_index": {
+  "0": 26,
+  "1": 22,
+  "2": 23,
+  "3": 25,
+  "4": 24,
+  "5": 21,
+  "6": 20,
+  "7": 19,
+  "8": 18,
+  "9": 17,
+  "10": 16,
+  "11": 15,
+  "12": 14,
+  "13": 13,
+  "14": 12,
+  "15": 11,
+  "16": 10,
+  "17": 9,
+  "18": 8,
+  "19": 7,
+  "20": 6,
+  "21": 5,
+  "22": 4,
+  "23": 3,
+  "24": 2,
+  "25": 1,
+  "26": 0
+ },
+ "rows": [
+  {
+   "prm_id": 0,
+   "name": "PRM_FEATURE_MANAGER_camera_parameters",
+   "getter": "0x183ee24",
+   "table": "0x37b90e8",
+   "values": {
+    "LS": {
+     "value": 0,
+     "label": "TYPE_CAMERA_PARAMETERS_LS"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_CAMERA_PARAMETERS_LAX"
+    },
+    "ALCIN_UUD": {
+     "value": 2,
+     "label": "TYPE_CAMERA_PARAMETERS_ALCIN_UUD"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 1,
+   "name": "PRM_FEATURE_MANAGER_imager_model",
+   "getter": "0x183f07c",
+   "table": "0x37b85f8",
+   "values": {
+    "LS": {
+     "value": 0,
+     "label": "TYPE_IMAGER_MODEL_IMX710"
+    },
+    "LAX": {
+     "value": 4,
+     "label": "TYPE_IMAGER_MODEL_IMX684"
+    },
+    "ALCIN_UUD": {
+     "value": 3,
+     "label": "TYPE_IMAGER_MODEL_IMX510"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 3,
+   "name": "PRM_FEATURE_MANAGER_shooting_mode_dial",
+   "getter": "0x183f0f4",
+   "table": "0x37b9548",
+   "values": {
+    "LS": {
+     "value": 0,
+     "label": "TYPE_SHOOTING_MODE_DIAL_NOT_AVAILABLE"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_SHOOTING_MODE_DIAL_AVAILABLE"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_SHOOTING_MODE_DIAL_AVAILABLE"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 5,
+   "name": "PRM_FEATURE_MANAGER_shoot_mode_switch",
+   "getter": "0x183eefc",
+   "table": "0x37b9318",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": "TYPE_SHOOT_MODE_SWITCH_BY_MODE_DIAL_MODE_LEVER"
+    },
+    "LAX": {
+     "value": 5,
+     "label": "TYPE_SHOOT_MODE_SWITCH_BY_MODE_BUTTON_DIAL_GUIDE"
+    },
+    "ALCIN_UUD": {
+     "value": 5,
+     "label": "TYPE_SHOOT_MODE_SWITCH_BY_MODE_BUTTON_DIAL_GUIDE"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 6,
+   "name": "PRM_FEATURE_MANAGER_lens_mount",
+   "getter": "0x183ef5c",
+   "table": "0x37b7e88",
+   "values": {
+    "LS": {
+     "value": 0,
+     "label": "TYPE_LENS_MOUNT_INTERCHANGEABLE"
+    },
+    "LAX": {
+     "value": 0,
+     "label": "TYPE_LENS_MOUNT_INTERCHANGEABLE"
+    },
+    "ALCIN_UUD": {
+     "value": 0,
+     "label": "TYPE_LENS_MOUNT_INTERCHANGEABLE"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 7,
+   "name": "PRM_FEATURE_MANAGER_exclusive_when_high_sensitivity_nr_set_to_raw",
+   "getter": "0x183f574",
+   "table": "0x37bb458",
+   "values": {
+    "LS": {
+     "value": 0,
+     "label": "TYPE_EXCLUSIVE_WHEN_HIGH_SENSITIVITY_NR_SET_TO_RAW_EXCLUSION"
+    },
+    "LAX": {
+     "value": 0,
+     "label": "TYPE_EXCLUSIVE_WHEN_HIGH_SENSITIVITY_NR_SET_TO_RAW_EXCLUSION"
+    },
+    "ALCIN_UUD": {
+     "value": 0,
+     "label": "TYPE_EXCLUSIVE_WHEN_HIGH_SENSITIVITY_NR_SET_TO_RAW_EXCLUSION"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 8,
+   "name": "PRM_FEATURE_MANAGER_animal_eye_af_phase_2_0",
+   "getter": "0x183f1b4",
+   "table": "0x37ba1f8",
+   "values": {
+    "LS": {
+     "value": 0,
+     "label": "TYPE_ANIMAL_EYE_AF_PHASE_2_0_SUPPORT"
+    },
+    "LAX": {
+     "value": 0,
+     "label": "TYPE_ANIMAL_EYE_AF_PHASE_2_0_SUPPORT"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_ANIMAL_EYE_AF_PHASE_2_0_NOT_SUPPORT"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 9,
+   "name": "PRM_FEATURE_MANAGER_animal_eye_af_in_movie",
+   "getter": "0x183f1cc",
+   "table": "0x37b9f58",
+   "values": {
+    "LS": {
+     "value": 0,
+     "label": "TYPE_ANIMAL_EYE_AF_IN_MOVIE_SUPPORT"
+    },
+    "LAX": {
+     "value": 0,
+     "label": "TYPE_ANIMAL_EYE_AF_IN_MOVIE_SUPPORT"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_ANIMAL_EYE_AF_IN_MOVIE_NOT_SUPPORT"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 10,
+   "name": "PRM_FEATURE_MANAGER_eye_face_af_gen_type",
+   "getter": "0x183f1e4",
+   "table": "0x37b98c8",
+   "values": {
+    "LS": {
+     "value": 0,
+     "label": "TYPE_EYE_FACE_AF_GEN_TYPE_2"
+    },
+    "LAX": {
+     "value": 0,
+     "label": "TYPE_EYE_FACE_AF_GEN_TYPE_2"
+    },
+    "ALCIN_UUD": {
+     "value": 0,
+     "label": "TYPE_EYE_FACE_AF_GEN_TYPE_2"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 11,
+   "name": "PRM_FEATURE_MANAGER_af_tracking_continuity",
+   "getter": "0x183f244",
+   "table": "0x37b9ee8",
+   "values": {
+    "LS": {
+     "value": 0,
+     "label": "TYPE_AF_TRACKING_CONTINUITY_SUPPORT"
+    },
+    "LAX": {
+     "value": 0,
+     "label": "TYPE_AF_TRACKING_CONTINUITY_SUPPORT"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_AF_TRACKING_CONTINUITY_NOT_SUPPORT"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 12,
+   "name": "PRM_FEATURE_MANAGER_electronic_shutter",
+   "getter": "0x183f22c",
+   "table": "0x37b9468",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": "TYPE_ELECTRONIC_SHUTTER_ROLLING_SHUTTER"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_ELECTRONIC_SHUTTER_ROLLING_SHUTTER"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_ELECTRONIC_SHUTTER_ROLLING_SHUTTER"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 13,
+   "name": "PRM_FEATURE_MANAGER_num_of_media_slot",
+   "getter": "0x183ee6c",
+   "table": "0x37b9158",
+   "values": {
+    "LS": {
+     "value": 0,
+     "label": "TYPE_NUM_OF_MEDIA_SLOT_DOUBLE"
+    },
+    "LAX": {
+     "value": 0,
+     "label": "TYPE_NUM_OF_MEDIA_SLOT_DOUBLE"
+    },
+    "ALCIN_UUD": {
+     "value": 0,
+     "label": "TYPE_NUM_OF_MEDIA_SLOT_DOUBLE"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 14,
+   "name": "PRM_FEATURE_MANAGER_product_concept",
+   "getter": "0x183f2d4",
+   "table": "0x37b8cf8",
+   "values": {
+    "LS": {
+     "value": 2,
+     "label": "TYPE_PRODUCT_CONCEPT_OTHER"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_PRODUCT_CONCEPT_CINEMA_LINE"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_PRODUCT_CONCEPT_CINEMA_LINE"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 15,
+   "name": "PRM_FEATURE_MANAGER_shutter_type_elec_strobe_flash",
+   "getter": "0x183f304",
+   "table": "0x37bac78",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": "TYPE_SHUTTER_TYPE_ELEC_STROBE_FLASH_FIXED_OFF"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_SHUTTER_TYPE_ELEC_STROBE_FLASH_FIXED_OFF"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_SHUTTER_TYPE_ELEC_STROBE_FLASH_FIXED_OFF"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 16,
+   "name": "PRM_FEATURE_MANAGER_heif_digital_signature",
+   "getter": "0x183f43c",
+   "table": "0x37ba038",
+   "values": {
+    "LS": {
+     "value": 0,
+     "label": "TYPE_HEIF_DIGITAL_SIGNATURE_SUPPORT"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_HEIF_DIGITAL_SIGNATURE_NOT_SUPPORT"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_HEIF_DIGITAL_SIGNATURE_NOT_SUPPORT"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 17,
+   "name": "PRM_FEATURE_MANAGER_wb_capture_size",
+   "getter": "0x183f49c",
+   "table": "0x37b8eb8",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": "TYPE_WB_CAPTURE_SIZE_NOT_SUPPORT"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_WB_CAPTURE_SIZE_NOT_SUPPORT"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_WB_CAPTURE_SIZE_NOT_SUPPORT"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 18,
+   "name": "PRM_FEATURE_MANAGER_c2pa_movie",
+   "getter": "0x183f6f4",
+   "table": "0x37b7d38",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": "TYPE_C2PA_MOVIE_SUPPORT"
+    },
+    "LAX": {
+     "value": 0,
+     "label": "TYPE_C2PA_MOVIE_NOT_SUPPORT"
+    },
+    "ALCIN_UUD": {
+     "value": 0,
+     "label": "TYPE_C2PA_MOVIE_NOT_SUPPORT"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 19,
+   "name": "PRM_FEATURE_MANAGER_timelapse_movie_4k",
+   "getter": "0x183f79c",
+   "table": "0x37b9698",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": "TYPE_TIMELAPSE_MOVIE_4K_SUPPORT"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_TIMELAPSE_MOVIE_4K_SUPPORT"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_TIMELAPSE_MOVIE_4K_SUPPORT"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 20,
+   "name": "PRM_FEATURE_MANAGER_usb_streming_movie_4k",
+   "getter": "0x183f7b4",
+   "table": "0x37b9e78",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": "TYPE_USB_STREMING_MOVIE_4K_SUPPORT"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_USB_STREMING_MOVIE_4K_SUPPORT"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_USB_STREMING_MOVIE_4K_SUPPORT"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 22,
+   "name": "PRM_FEATURE_MANAGER_drive_mode_dial",
+   "getter": "0x183f124",
+   "table": "0x37b8ac8",
+   "values": {
+    "LS": {
+     "value": 2,
+     "label": "TYPE_DRIVE_MODE_DIAL_AVAILABLE_WITH_MENU"
+    },
+    "LAX": {
+     "value": 2,
+     "label": "TYPE_DRIVE_MODE_DIAL_AVAILABLE_WITH_MENU"
+    },
+    "ALCIN_UUD": {
+     "value": 2,
+     "label": "TYPE_DRIVE_MODE_DIAL_AVAILABLE_WITH_MENU"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 24,
+   "name": "PRM_FEATURE_MANAGER_system_architecture",
+   "getter": "0x183ee84",
+   "table": "0x37b9858",
+   "values": {
+    "LS": {
+     "value": 0,
+     "label": "TYPE_SYSTEM_ARCHITECTURE_IPSX"
+    },
+    "LAX": {
+     "value": 0,
+     "label": "TYPE_SYSTEM_ARCHITECTURE_IPSX"
+    },
+    "ALCIN_UUD": {
+     "value": 0,
+     "label": "TYPE_SYSTEM_ARCHITECTURE_IPSX"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 25,
+   "name": "PRM_FEATURE_MANAGER_one_nand_ddr_capacity",
+   "getter": "0x183ee9c",
+   "table": "0x37b9d98",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": "TYPE_ONE_NAND_DDR_CAPACITY_NOT_LAID_FLAT"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_ONE_NAND_DDR_CAPACITY_NOT_LAID_FLAT"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_ONE_NAND_DDR_CAPACITY_NOT_LAID_FLAT"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 27,
+   "name": "PRM_FEATURE_MANAGER_digital_signature_still_movie",
+   "getter": "0x183f97c",
+   "table": "0x37baab8",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": "TYPE_DIGITAL_SIGNATURE_STILL_MOVIE_SUPPORT"
+    },
+    "LAX": {
+     "value": 0,
+     "label": "TYPE_DIGITAL_SIGNATURE_STILL_MOVIE_NOT_SUPPORT"
+    },
+    "ALCIN_UUD": {
+     "value": 0,
+     "label": "TYPE_DIGITAL_SIGNATURE_STILL_MOVIE_NOT_SUPPORT"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 106,
+   "name": "PRM_FEATURE_MANAGER_exclusive_movie_steady_shot_during_movie_rec",
+   "getter": "0x183fa6c",
+   "table": "0x37bb3e8",
+   "values": {
+    "LS": {
+     "value": 3,
+     "label": "TYPE_EXCLUSIVE_MOVIE_STEADY_SHOT_DURING_MOVIE_REC_EXCLUSION"
+    },
+    "LAX": {
+     "value": 0,
+     "label": "TYPE_EXCLUSIVE_MOVIE_STEADY_SHOT_DURING_MOVIE_REC_NOT_EXCLUSION"
+    },
+    "ALCIN_UUD": {
+     "value": 0,
+     "label": "TYPE_EXCLUSIVE_MOVIE_STEADY_SHOT_DURING_MOVIE_REC_NOT_EXCLUSION"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 107,
+   "name": "PRM_FEATURE_MANAGER_steadyshot_correct_method_with_body",
+   "getter": "0x183f6dc",
+   "table": "0x37bb0d8",
+   "values": {
+    "LS": {
+     "value": 0,
+     "label": "TYPE_STEADYSHOT_CORRECT_METHOD_WITH_BODY_OPTICAL_AND_ELECTRICAL"
+    },
+    "LAX": {
+     "value": 0,
+     "label": "TYPE_STEADYSHOT_CORRECT_METHOD_WITH_BODY_OPTICAL_AND_ELECTRICAL"
+    },
+    "ALCIN_UUD": {
+     "value": 0,
+     "label": "TYPE_STEADYSHOT_CORRECT_METHOD_WITH_BODY_OPTICAL_AND_ELECTRICAL"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 109,
+   "name": "PRM_FEATURE_MANAGER_mecha_shutter",
+   "getter": "0x183f0ac",
+   "table": "0x37b8828",
+   "values": {
+    "LS": {
+     "value": 0,
+     "label": "TYPE_MECHA_SHUTTER_MECHA_SHUTTER_AVAILABLE"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_MECHA_SHUTTER_MECHA_SHUTTER_NOT_AVAILABLE"
+    },
+    "ALCIN_UUD": {
+     "value": 0,
+     "label": "TYPE_MECHA_SHUTTER_MECHA_SHUTTER_AVAILABLE"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 110,
+   "name": "PRM_FEATURE_MANAGER_shutter_curtain",
+   "getter": "0x183f40c",
+   "table": "0x37b8e48",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": "TYPE_SHUTTER_CURTAIN_AVAILABLE"
+    },
+    "LAX": {
+     "value": 0,
+     "label": "TYPE_SHUTTER_CURTAIN_NOT_AVAILABLE"
+    },
+    "ALCIN_UUD": {
+     "value": 0,
+     "label": "TYPE_SHUTTER_CURTAIN_NOT_AVAILABLE"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 111,
+   "name": "PRM_FEATURE_MANAGER_custom_mr_during_s1s2",
+   "getter": "0x183f3dc",
+   "table": "0x37b9af8",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": "TYPE_CUSTOM_MR_DURING_S1S2_NOT_SUPPORT"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_CUSTOM_MR_DURING_S1S2_NOT_SUPPORT"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_CUSTOM_MR_DURING_S1S2_NOT_SUPPORT"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 112,
+   "name": "PRM_FEATURE_MANAGER_fastest_shutter_speed_of_mecha_shutter",
+   "getter": "0x183f9dc",
+   "table": "0x37bb228",
+   "values": {
+    "LS": {
+     "value": 2,
+     "label": "TYPE_FASTEST_SHUTTER_SPEED_OF_MECHA_SHUTTER_1_8000"
+    },
+    "LAX": {
+     "value": 0,
+     "label": "TYPE_FASTEST_SHUTTER_SPEED_OF_MECHA_SHUTTER_NONE"
+    },
+    "ALCIN_UUD": {
+     "value": 2,
+     "label": "TYPE_FASTEST_SHUTTER_SPEED_OF_MECHA_SHUTTER_1_8000"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 113,
+   "name": "PRM_FEATURE_MANAGER_zoom_still",
+   "getter": "0x183f88c",
+   "table": "0x37b8128",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": "TYPE_ZOOM_STILL_SUPPORT"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_ZOOM_STILL_SUPPORT"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_ZOOM_STILL_SUPPORT"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 114,
+   "name": "PRM_FEATURE_MANAGER_exclusive_during_digital_zoom",
+   "getter": "0x183f664",
+   "table": "0x37bab28",
+   "values": {
+    "LS": {
+     "value": 0,
+     "label": "TYPE_EXCLUSIVE_DURING_DIGITAL_ZOOM_EXCLUSION"
+    },
+    "LAX": {
+     "value": 0,
+     "label": "TYPE_EXCLUSIVE_DURING_DIGITAL_ZOOM_EXCLUSION"
+    },
+    "ALCIN_UUD": {
+     "value": 0,
+     "label": "TYPE_EXCLUSIVE_DURING_DIGITAL_ZOOM_EXCLUSION"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 119,
+   "name": "PRM_FEATURE_MANAGER_menu_item",
+   "getter": "0x183ee0c",
+   "table": "0x37b7be8",
+   "values": {
+    "LS": {
+     "value": 0,
+     "label": "TYPE_MENU_ITEM_LS"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_MENU_ITEM_LAX"
+    },
+    "ALCIN_UUD": {
+     "value": 2,
+     "label": "TYPE_MENU_ITEM_ALCIN_UUD"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 120,
+   "name": "PRM_FEATURE_MANAGER_cont_shooting_type",
+   "getter": "0x183f964",
+   "table": "0x37b93f8",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": "TYPE_CONT_SHOOTING_TYPE_OTHER"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_CONT_SHOOTING_TYPE_OTHER"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_CONT_SHOOTING_TYPE_OTHER"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 257,
+   "name": "PRM_FEATURE_MANAGER_exclusive_focus_mag_during_bright_monitoring",
+   "getter": "0x183f6c4",
+   "table": "0x37bb378",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": "TYPE_EXCLUSIVE_FOCUS_MAG_DURING_BRIGHT_MONITORING_EXCLUSION"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_EXCLUSIVE_FOCUS_MAG_DURING_BRIGHT_MONITORING_EXCLUSION"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_EXCLUSIVE_FOCUS_MAG_DURING_BRIGHT_MONITORING_EXCLUSION"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 260,
+   "name": "PRM_FEATURE_MANAGER_support_cfexpress",
+   "getter": "0x183f04c",
+   "table": "0x37b9388",
+   "values": {
+    "LS": {
+     "value": 2,
+     "label": "TYPE_SUPPORT_CFEXPRESS_SLOT1"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_SUPPORT_CFEXPRESS_SLOT1_SLOT2"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_SUPPORT_CFEXPRESS_SLOT1_SLOT2"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 707,
+   "name": "PRM_FEATURE_MANAGER_image_size_switch_onemount",
+   "getter": "0x183f214",
+   "table": "0x37ba658",
+   "values": {
+    "LS": {
+     "value": 0,
+     "label": "TYPE_IMAGE_SIZE_SWITCH_ONEMOUNT_SUPPORT"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_IMAGE_SIZE_SWITCH_ONEMOUNT_NOT_SUPPORT"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_IMAGE_SIZE_SWITCH_ONEMOUNT_NOT_SUPPORT"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 994,
+   "name": "PRM_FEATURE_MANAGER_focus_mode_dial",
+   "getter": "0x183f10c",
+   "table": "0x37b8ba8",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": "TYPE_FOCUS_MODE_DIAL_AVAILABLE"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_FOCUS_MODE_DIAL_AVAILABLE"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_FOCUS_MODE_DIAL_AVAILABLE"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 1001,
+   "name": "PRM_FEATURE_MANAGER_flash_during_drive_mode_cont_shooting",
+   "getter": "0x183f28c",
+   "table": "0x37bb148",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": "TYPE_FLASH_DURING_DRIVE_MODE_CONT_SHOOTING_AVAILABLE"
+    },
+    "LAX": {
+     "value": 1,
+     "label": "TYPE_FLASH_DURING_DRIVE_MODE_CONT_SHOOTING_AVAILABLE"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_FLASH_DURING_DRIVE_MODE_CONT_SHOOTING_AVAILABLE"
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 1004,
+   "name": "PRM_FEATURE_MANAGER_flash_during_drive_mode_cont_self_timer",
+   "getter": "0x183f2a4",
+   "table": "0x37bb298",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": "TYPE_FLASH_DURING_DRIVE_MODE_CONT_SELF_TIMER_SHOOTING_AVAILABLE"
+    },
+    "LAX": {
+     "value": 0,
+     "label": "TYPE_FLASH_DURING_DRIVE_MODE_CONT_SELF_TIMER_SHOOTING_NOT_AVAILABLE"
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": "TYPE_FLASH_DURING_DRIVE_MODE_CONT_SELF_TIMER_SHOOTING_AVAILABLE"
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 1502,
+   "name": "PRM_FEATURE_MANAGER_dmf_type",
+   "getter": "0x183f37c",
+   "table": "0x37b7a98",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": null
+    },
+    "LAX": {
+     "value": 1,
+     "label": null
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": null
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 2270,
+   "name": "PRM_FEATURE_MANAGER_audio_rec_level_with_mishoe_mic",
+   "getter": "0x183f5bc",
+   "table": "0x37badc8",
+   "values": {
+    "LS": {
+     "value": 0,
+     "label": null
+    },
+    "LAX": {
+     "value": 0,
+     "label": null
+    },
+    "ALCIN_UUD": {
+     "value": 0,
+     "label": null
+    }
+   },
+   "differs": false
+  },
+  {
+   "prm_id": 2668,
+   "name": "PRM_FEATURE_MANAGER_screen_reader_generation",
+   "getter": "0x183f7fc",
+   "table": "0x37ba3b8",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": null
+    },
+    "LAX": {
+     "value": 1,
+     "label": null
+    },
+    "ALCIN_UUD": {
+     "value": 0,
+     "label": null
+    }
+   },
+   "differs": true
+  },
+  {
+   "prm_id": 2764,
+   "name": "PRM_FEATURE_MANAGER_exclusive_lcd_brightness_exclusion_by_temperature",
+   "getter": "0x183f844",
+   "table": "0x37bb4c8",
+   "values": {
+    "LS": {
+     "value": 1,
+     "label": null
+    },
+    "LAX": {
+     "value": 1,
+     "label": null
+    },
+    "ALCIN_UUD": {
+     "value": 1,
+     "label": null
+    }
+   },
+   "differs": false
+  }
+ ]
+}

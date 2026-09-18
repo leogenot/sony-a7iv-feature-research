@@ -22,9 +22,10 @@ flag:
 3. The A7 IV application nevertheless contains the same underlying shutter
    mode parameter, angle values, next/previous-angle actions, UI action key,
    and English label/help text found in the FX3 firmware.
-4. The broad `FEATURE_MANAGER_menu_item` value is the same for the A7 IV's
-   `LAX` product class and the FX3's `ALCIN_UUD` product class. That broad
-   switch therefore does not explain this one missing page.
+4. The A7 IV runs as `PRODUCT_MODEL_LS`, and `FEATURE_MANAGER_menu_item`
+   selects a separate menu catalogue for every product class (`LS=0`,
+   `ALCIN_UUD=2`). An earlier version of this note read the wrong table and
+   concluded that the value was shared. See [Product class](PRODUCT_CLASS.md).
 5. No `PRM_HAITA_setting_mode_shutter...` exclusion rule is present in the A7
    IV binary. In this firmware, temporary enable/disable conditions normally
    leave `PRM_HAITA_...`/`VAL_HAITA_...` names. Their absence does not prove
@@ -411,29 +412,30 @@ This confirms that the A7 IV has a live shutter-mode UI/action key. The
 not create a Settings menu node. That distinction matches the observed result:
 the movie display reacts, while the Settings catalogue remains unchanged.
 
-### The broad menu feature flag is not the discriminator
+### Correction: the menu catalogue is selected per product
 
-The A7 IV's product-name table identifies:
+An earlier version of this section stated that the A7 IV was
+`PRODUCT_MODEL_LAX` (enum 4, feature index 24) and that the
+`FEATURE_MANAGER_menu_item` getter at `0x183f0f4` returned `1` for both
+`LAX` and `ALCIN_UUD`. All three statements were wrong:
 
-```text
-PRODUCT_MODEL_LAX        enum 4
-PRODUCT_MODEL_ALCIN_UUD  enum 5
-```
-
-`feature_manager::update_product_model()` begins at `0x183ecc0`. Its jump
-table at `0x37b7910` maps product enum 4 (`LAX`) to internal feature-table
-index 24 and enum 5 (`ALCIN_UUD`) to index 21. The
-`FEATURE_MANAGER_menu_item` getter at `0x183f0f4` loads from table
-`0x37b9548`. Both relevant entries are `1`:
+- The A7 IV is `PRODUCT_MODEL_LS`: enum 0, feature index 26.
+- The generated records give `LAX=3 → 25` and `ALCIN_UUD=4 → 24`.
+- `0x183f0f4` is the `shooting_mode_dial` getter (parameter id 3). The
+  `menu_item` getter is `0x183ee0c` (parameter id 119, table `0x37b7be8`).
+  It is an identity table, so each product class has its own menu catalogue:
 
 ```text
-table[24]  LAX        = 1
-table[21]  ALCIN_UUD  = 1
+menu_item[LS]         = TYPE_MENU_ITEM_LS         (0)
+menu_item[LAX]        = TYPE_MENU_ITEM_LAX        (1)
+menu_item[ALCIN_UUD]  = TYPE_MENU_ITEM_ALCIN_UUD  (2)   FX3 class
 ```
 
-Therefore changing the broad `FEATURE_MANAGER_menu_item` value is not a
-supported explanation or a useful next experiment. The missing page must be
-selected at a finer level.
+The per-product catalogue is therefore the leading explanation for the
+missing **Shutter Mode** page. The catalogue node that includes the page for
+`ALCIN_UUD` and omits it for `LS` has not been located yet. Changing the global
+product model is still not an acceptable experiment. The full derivation is in
+[Product class](PRODUCT_CLASS.md).
 
 ### Shared resources do not imply a shared menu catalogue
 
@@ -470,8 +472,9 @@ it is not sufficient to identify the responsible predicate.
 - It is not explained by the current P/A/S/M or Flexible Exposure selection.
   Those conditions govern whether the FX3's **Angle** choice is active; Sony
   documents the **Shutter Mode** menu item itself for movie/S&Q.
-- It is not controlled by the broad feature-manager `menu_item` value; that
-  value is identical for the two product classes in the A7 IV shared build.
+- It is not controlled by a backup byte. The per-product feature-manager
+  `menu_item` catalogue, which differs between `LS` and `ALCIN_UUD`, is the
+  leading candidate.
 - The present analysis found no evidence for a second backup property whose
   sole purpose is to reveal this page.
 
@@ -483,7 +486,8 @@ There are now two concrete targets:
    properties from the protocol-3 descriptor generator. The controlled USB
    comparison establishes that no alternate property replaces shutter speed.
 2. Trace the writers feeding HAITA getter `0x293d634`, then compare their
-   product-model inputs for `PRODUCT_MODEL_LAX` and `PRODUCT_MODEL_ALCIN_UUD`.
+   product-model inputs for `PRODUCT_MODEL_LS` (A7 IV) and
+   `PRODUCT_MODEL_ALCIN_UUD` (FX3 class).
    This is more direct than patching angle arithmetic, which already exists.
 
 The Exposure menu's ordered item list remains a separate target for restoring
@@ -528,7 +532,7 @@ name length.
 | The angle-mode dial path contains a generated HAITA availability guard before the setter | High |
 | Angle mode disables both exposed speed descriptors without exposing an angle replacement | High, from the controlled protocol-3 A/B capture |
 | The exact input which keeps that HAITA state asserted on the A7 IV | Not yet established |
-| A finer product-specific menu catalogue/composition path suppresses the A7 IV page | Medium-high |
+| The per-product `menu_item` catalogue (`TYPE_MENU_ITEM_LS`) suppresses the A7 IV page | Medium-high |
 | Exact function/table/patch responsible for the omission | Not yet established |
 
 [a7-menu]: https://helpguide.sony.net/ilc/2110/v1/en/contents/TP1001803623.html

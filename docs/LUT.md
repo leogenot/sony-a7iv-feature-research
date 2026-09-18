@@ -57,6 +57,13 @@ property mapping remains valid, but support on LS-class hardware remains
 unproven. There is also no positive A7 IV evidence for Cine EI values `02` or
 `03`.
 
+[Product class](PRODUCT_CLASS.md) now proves the `LS` classification from the
+executable feature-manager tables. It also shows that the Log Shooting
+model-difference rule names 14 product classes and omits `LS`. This is a
+product-level availability rule, which explains why the retained
+`0x02cf1443=01` exposed no menu or behaviour. It is not a missing coordinated
+setter call. Further Log Shooting backup experiments are not justified.
+
 ## Readback diagnostic
 
 Physical-camera result on firmware 6.02:

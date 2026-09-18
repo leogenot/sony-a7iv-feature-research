@@ -115,4 +115,9 @@ contain model-specific Off/Flexible-ISO combinations for `TYPE_LAX`,
 withdraws the earlier LAX classification and means those LAX values cannot be
 used as positive evidence for A7 IV support.
 
+The executable proof of the `LS` class, the per-product `menu_item`
+catalogue and a complete list of product-naming HAITA rules are in
+[Product class](PRODUCT_CLASS.md) and
+[Feature inventory](FEATURE_INVENTORY.md).
+
 The camera serial number and backup hash are deliberately omitted.
