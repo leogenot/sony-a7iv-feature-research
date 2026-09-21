@@ -43,7 +43,10 @@ files. Obtain the official update yourself and keep generated data local.
    [Research evidence](docs/RESEARCH_EVIDENCE.md).
 6. See [Open Gate research](docs/OPEN_GATE.md) for the full-height 5K 3:2
    scan-mode evidence and its current limitations.
-7. See the [ranked feature inventory](docs/FEATURE_INVENTORY.md) and the
+7. See [Upstream A7 IV repositories](docs/UPSTREAM_REPOSITORIES.md) for an
+   assessment of the serial-boot/fastboot work and Sony's released Linux
+   source, including how they can help resolve lower-layer feature support.
+8. See the [ranked feature inventory](docs/FEATURE_INVENTORY.md) and the
    [product-class analysis](docs/PRODUCT_CLASS.md) before proposing any new
    backup-property experiment.
 
