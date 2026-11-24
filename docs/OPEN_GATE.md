@@ -1,5 +1,18 @@
 # Open Gate / full-height movie recording
 
+## Update (2026-11-24): open gate works through memory patches
+
+The conclusion below still holds for settings: no backup property or menu value unlocks open gate. A working route
+exists outside them:
+
+- [ArcaneLantern/a7iv-open-gate-test](https://github.com/ArcaneLantern/a7iv-open-gate-test) records 3840x2560 (4K 3:2) and 5760x3840 (5.7K 3:2) by patching the
+  camera's memory over USB for one power-on: the 4K drive mode's sensor readout opened to the full 4672 rows, the
+  movie output size, the encoder's descriptors and profiles in `av-cam.bin`, and the MP4 writer in `libmpr.so`. It
+  does not use the 5016x3344 scan mode described below.
+- [sony-a7m4-custom-firmware-open-gate](https://github.com/leogenot/sony-a7m4-custom-firmware-open-gate) builds those patches into Erlla's custom firmware v0.1.3: a module in
+  `appFw.so` applies them at start-up, the mode is set from **MENU > Shooting > Media > Open Gate** and kept across
+  power cycles, with no USB session. Not yet run on a camera. 1080p open gate is researched there but not built.
+
 ## Current conclusion
 
 The A7 IV 6.02 application contains a generic full-frame 5K 3:2 imager path,

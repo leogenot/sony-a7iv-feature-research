@@ -25,7 +25,7 @@ files. Obtain the official update yourself and keep generated data local.
 | Decrypted filesystem read | Verified, read-only | Jiritsu `GET_FILE2` accepts a traversal path and returns files from the running camera. 1,064 update-backed files were independently hash-matched. |
 | Shutter angle | Display verified; adjustment still gated | `0x02cf1702`: `00` speed, `01` angle. Existing `0x02cf1704=10` displays 180°, but A7 IV 6.02 still routes touch/dial control away from the angle setter. |
 | Custom LUT | Implementation verified; runtime gate unresolved | `0x02cf1443=01` is accepted, survives sync and cold boot, but does not expose Flexible ISO. User1–User16 storage, CUBE parsing, selection and display paths exist; a separate runtime/UI condition remains. |
-| Open Gate | Generic imager path found; recording path unproven | Shared firmware names a 5016x3344 3:2 scan mode, but no matching encoder profile, live PTP resolution, or verified A7 IV product route has been found. |
+| Open Gate | Recording achieved by memory patches, not settings | No setting unlocks it. [ArcaneLantern's kit](https://github.com/ArcaneLantern/a7iv-open-gate-test) records 3840x2560 and 5760x3840 by patching sensor, scaler and encoder memory over USB; [sony-a7m4-custom-firmware-open-gate](https://github.com/leogenot/sony-a7m4-custom-firmware-open-gate) builds that into Erlla's custom firmware with a menu item and keeps the mode across power cycles (untested on a camera). The 5016x3344 scan-mode names below remain unused. |
 | Product class | Resolved offline | The A7 IV runs the shared application as `PRODUCT_MODEL_LS`, not `LAX`. Each product class selects its own menu catalogue. See [Product class](docs/PRODUCT_CLASS.md). |
 | Log Shooting / Flexible ISO | Product-excluded | The generated Log Shooting model-difference rule names 14 product classes and omits `LS`. |
 | De-Squeeze Display | Strong candidate, untested | `0x02cf1bf2` (`00` Off, `01` 1.3x, `02` 2.0x) reaches the display-scale sequence with no product check. See [De-Squeeze](docs/DE_SQUEEZE.md). |
@@ -42,7 +42,8 @@ files. Obtain the official update yourself and keep generated data local.
    [Firmware extraction](docs/FIRMWARE_EXTRACTION.md) and
    [Research evidence](docs/RESEARCH_EVIDENCE.md).
 6. See [Open Gate research](docs/OPEN_GATE.md) for the full-height 5K 3:2
-   scan-mode evidence and its current limitations.
+   scan-mode evidence and its current limitations. For working open gate, see
+   [sony-a7m4-custom-firmware-open-gate](https://github.com/leogenot/sony-a7m4-custom-firmware-open-gate).
 7. See [Upstream A7 IV repositories](docs/UPSTREAM_REPOSITORIES.md) for an
    assessment of the serial-boot/fastboot work and Sony's released Linux
    source, including how they can help resolve lower-layer feature support.
