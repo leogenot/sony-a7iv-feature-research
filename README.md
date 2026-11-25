@@ -1,5 +1,7 @@
 # Sony A7 IV firmware and feature research
 
+## Working Beta firmware: [here](https://github.com/leogenot/sony-a7m4-custom-firmware-open-gate)
+
 Use this at your own risk, I am not responsible for any damages.
 
 Reproducible notes and tools for studying Sony ILCE-7M4 firmware 6.02 through
