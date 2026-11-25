@@ -52,6 +52,8 @@ files. Obtain the official update yourself and keep generated data local.
 8. See the [ranked feature inventory](docs/FEATURE_INVENTORY.md) and the
    [product-class analysis](docs/PRODUCT_CLASS.md) before proposing any new
    backup-property experiment.
+9. See the [cinema-feature roadmap](docs/ROADMAP.md) for what is shipped, what is waiting for a camera test, and
+   the candidates still to build.
 
 ## Enter service mode
 
