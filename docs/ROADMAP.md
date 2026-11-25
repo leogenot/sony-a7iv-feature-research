@@ -19,6 +19,7 @@ each one stands and what decides the next step. Evidence grades (A–E) are the
 | Open gate chosen and applied on movie | [`alpha-movie-0.1`](https://github.com/leogenot/sony-a7m4-custom-firmware-open-gate/releases/tag/alpha-movie-0.1) | Whether a movie-mode apply takes effect after the menu closes, needs a pipeline restart, or freezes |
 | Shutter angle on the dial | [`alpha-angle-0.1`](https://github.com/leogenot/sony-a7m4-custom-firmware-open-gate/releases/tag/alpha-angle-0.1) | Whether lifting the availability gate `0x293d634` is enough, and whether the exposure follows the angle. Also the pilot for unlocking other FX3-only code. |
 | XAVC S-I DCI 4K in File Format, Rec Frame Rate 24p/30p (NTSC), 25p (PAL) | [`alpha-dci-0.1`](https://github.com/leogenot/sony-a7m4-custom-firmware-open-gate/releases/tag/alpha-dci-0.1) | Whether unhiding Sony's DCI item (42) and options (141, 202–207) in the menu lookups is enough, and whether the pipeline records 4096x2160 |
+| Open gate in File Format ("4K 3:2 Open Gate", "5.7K 3:2 Open Gate"), Rec Frame Rate limited to 24p / 25p | [`alpha-formats-0.1`](https://github.com/leogenot/sony-a7m4-custom-firmware-open-gate/releases/tag/alpha-formats-0.1) | Whether the reused File Format rows show and whether applying open gate during the format change works on movie |
 | 1080p 3:2 open gate (1920x1280) and HD 60p: read-only probe | [`alpha-hd-probe-0.1`](https://github.com/leogenot/sony-a7m4-custom-firmware-open-gate/releases/tag/alpha-hd-probe-0.1) | Which sensor readout HD 24/30/60p uses: route A (the 4K readout, scaled) or route B (binned, new sensor work) |
 
 ## Candidates
@@ -37,7 +38,6 @@ the A7 IV already has, as Erlla did for Custom LUTs.
 | Log shooting mode and Flexible ISO | D | Unlock, else build (mostly UI) | A7 IV already changes ISO freely in S-Log3 | After the shutter-angle pilot |
 | In-camera time-lapse movie | open lead | Unlock | Whether the A7 IV can reach `timelapse_movie_4k`. Sony only ships it at launch on newer bodies (a6700, a7C II, a7 V …), never added by firmware. | Trace its consumers |
 | Big6-style main screen, waveform, false colour | — | Build | New screens drawn with Sony's internal drawing system. Monitor & Control (phone app) already gives the A7 IV waveform, vectorscope and false colour. | Large; after the cheaper items |
-| Open gate as File Format entries ("XAVC HS 4K 3:2", "5.7K 3:2") | — | Build | The File Format row mechanism (the DCI build proves it); a format change also restarts the movie pipeline, the safe moment to apply | After `alpha-dci-0.1` |
 | Binned full-frame 60p below 4K (e.g. 3.5K, 3504 wide) | — | Build | A 2x2-binned readout exists as a stills mode (`0x5002`); measurements say FF HD 120p reads the full height in 6.5 ms. Erlla reports working on "3.5K60 in 2x2 binning". | Watch Erlla's work |
 
 ## Not possible on this body
